@@ -1,0 +1,78 @@
+
+
+/* ==========================================================================
+   Remi B. CSS for Fb Event App
+   ========================================================================== */
+
+
+
+/*pour ajuster la taille des modales*/
+.modal.modal-wide .modal-dialog {
+  width: 80%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
+
+.time_selection {
+	margin: 3px 0px 3px 0px;
+}
+
+td {
+	padding-left: 15px;
+}
+
+.tab_hour {
+	color: #7b7b7b;
+	font-size: 13px;
+}
+
+.error-color{
+	color : #dd2525;
+}
+
+.success-color {
+	color : #2da057;
+}
+
+.image-preview {
+	
+	overflow: hidden;
+	height : 150px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+	
+.image-preview img {
+
+	/*height: 100%;*/
+	width: auto;
+	border: 4px solid #606060;
+	width: 100%;
+}
+
+.event-photo-div {
+	background-color: #b9b9b9;
+}
+
+.header-event {
+	padding: 10px 0 10px 0;
+	background-color: #4d4d4d;
+	color: white;
+}
+
+.header-event p{
+	margin: 0 0 0 0;
+	font-size: 20px;
+}
+
+.photo-number{
+	float: right;
+}
+
+.no-event {
+	font-size: 20px;
+	height: 100px;
+	padding-top: 42px;
+}
