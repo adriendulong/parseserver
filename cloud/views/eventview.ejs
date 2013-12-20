@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+    <head> 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title> <%= eventObject.get("name") %> </title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	    <meta name="description" content="<%= eventObject.get("name") %>" />
+	    <meta name="keywords" content="Woovent, wovent, wouvent, evenement, event, evenements, facebook, app, iphone, appstore" />
+	    <meta name="author" content="Woovent" />
+	    
+	    <!-- OG Facebook -->
+	    <meta property="og:type" content="website"> 
+		<meta property="fb:app_id" content="493616390746321" />
+		<meta property="og:site_name" content="Woovent"> 
+		<meta property="fb:admins" content="bardouxr"> 
+		<meta property="og:image" content="<%= photoUrl %>"> 
+		<meta property="og:url" content="<%= eventUrl %>">
+		<meta property="og:title" content="<%= eventObject.get("name") %>" > 
+		<meta property="og:description" content="Transformez vos évènements Facebook en de véritables albums photos souvenirs !">	
+		
+	    <meta name="twitter:site" content="@wooventapp">
+		<meta name="twitter:card" content="summary">
+	    <meta name="twitter:title" content="Woovent, Gérez vos évènements Facebook du bout des doigts !">
+	    <meta name="twitter:description" content="Découvrez vos statistiques et vos évènements marquant de l'année 2013 en une image !">
+	    <meta name="twitter:image" content="https://woovent.com/images/icon_woovent512.png">
+	    
+	        
+		<!-- Mobile Specific Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		
+		<!-- CSS File -->
+        <link rel="stylesheet" href="//woovent.com/app/css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+        </style>
+        <link rel="stylesheet" href="//woovent.com/app/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="//woovent.com/app/css/eventview.css">
+		<link rel="stylesheet" href="//woovent.com/app/css/lightbox.css" />
+
+        <!--[if lt IE 9]>
+            <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
+        <![endif]-->
+        
+        <link rel="shortcut icon" href="//woovent.com/app/img/favicon.ico">
+        
+        <script>
+		//on get l'id de l'event
+		var urlEventId = "<%= eventId %>";
+		</script>
+        
+        <!-- JS File -->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="//www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+        <script src="///woovent.com/app/js/vendor/bootstrap.min.js"></script>
+        <script src="//woovent.com/app/js/eventview.js"></script>
+        <script src="//woovent.com/app/js/lightbox-2.6.min.js"></script>
+		<script>
+				
+		Parse.initialize("8UT7kL1fmD9Orti3P7obNJyTgSpJpEGvz4HkCrr8", "PvIWJ0YU4q2XYr0DjhQiGDLBeTyhusQ5xpCwQNuq");
+		
+		
+		  window.fbAsyncInit = function() {
+			  Parse.FacebookUtils.init({
+			    appId      : '493616390746321', // App ID
+			    channelUrl : '//moment.parseapp.com//channel.html', // Channel File
+				status     : true, // check login status
+				cookie     : true, // enable cookies to allow Parse to access the session
+				xfbml      : true  // parse XFBML
+	        });
+			  //isUserConnected();  
+	      };
+	      
+	      (function(d, debug){
+	         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	         if (d.getElementById(id)) {return;}
+	         js = d.createElement('script'); js.id = id; js.async = true;
+	         js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+	         ref.parentNode.insertBefore(js, ref);
+	       }(document, /*debug*/ false));
+	       
+	       // Additional init code here
+		
+		</script>
+        
+        
+    </head>
+    
+        
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Début Body
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+    <body onload="initJS()" onresize="setDivHeight()">
+    
+	    <div id="fb-root"></div>
+     
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Header Nav Bar
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+ 
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+
+          <a class="navbar-brand" href="https://www.woovent.com"><span style="color:orange;"> Woovent </span><span style="color : white; font-size : 12px;"> beta </span> </a>
+          
+        </div><!-- Fin  navbar header -->
+        <center class=" hidden-xs"><h3 style="color : white;"> <span style="margin-left: -130px;"> <%= eventObject.get("name") %> </span> </h3></center>
+        <!--
+        <div class="navbar-collapse collapse">
+	      <ul class="nav navbar-nav navbar-right">
+	            <li> <button href="#" class="btn btn-success btn-logged-in" style="margin-top : 10px; margin-right :20px; display : none;">Statistiques</button></li>
+	            <li> <button href="http://remibardoux.com/fbapp/souvenirs.html" class="btn btn-info btn-logged-in" style="margin-top : 10px; margin-right :20px; display : none;"><span class="badge pull-right" style="background-color : white; color : #5bc0de;">42</span>Mes Souvenirs &nbsp </button></li>
+	            <li> <button onclick="fblogin()" class="btn btn-primary btn-login" style="margin-top : 10px;">Login With Facebook</button></li>
+	            <li> <button onclick="" class="btn btn-default btn-logged-in" style="margin-top : 10px; display : none;">Logout</button></li>
+	            
+	      </ul>
+        </div><!--/.navbar-collapse -->
+      </div><!-- Fin container navbar-->
+    </div><!-- Fin navbar-->
+  
+  
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Container 
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+ 
+          <center><h3 class="hidden-lg hidden-md hidden-sm" style="color : grey;"> <%= eventObject.get("name") %> </h3></center>
+
+
+    	<div class="row">
+			<div class="alert alert-success col-md-10 col-lg-10 col-md-offset-1 col-lg-offset-1" style="margin-top: 15px;margin-bottom: 0px;"> <center>En attendant le lancement officiel, vous pouvez quand même simplement consulter les photos postées par vos amis lors de ces évènements ! </center></div>
+    	</div>
+    	
+    	<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 loading-div col-xs-offset-3 col-sm-offset-4 col-md-offset-4 col-lg-offset-4">
+		 	<center><p>Chargement des images en cours ...</p></center>
+		 </div>
+		<!--
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<center><h1 style="color : rgb(107, 107, 107);"> <%= eventObject.get("name") %> </h1></center>
+			</div>
+		</div>
+		-->
+		
+		<div class="img-container">
+
+
+	
+
+		<!-- Fin img-container -->	
+		</div>
+		
+		
+	<!-- Fin Container -->	
+	</div>
+
+	
+	
+	<script>	
+	// Pour Google Analytics
+	    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+	    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	    g.src='//www.google-analytics.com/ga.js';
+	    s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script> 
+    
+    </body>
+</html>

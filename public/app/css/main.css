@@ -1,0 +1,61 @@
+
+
+/* ==========================================================================
+   Remi B. CSS for Fb Event App
+   ========================================================================== */
+
+
+
+
+.hiddingDiv {
+	padding-top: 25px;
+
+	height: 350px;
+	width: 90%;
+	margin-top: -21px;
+	z-index: 1000;
+	position: absolute;
+    background: rgba(119,119,119); /* Fall-back for browsers that don't support rgba */
+    background: rgba(0,0,0,0.7);
+	
+	color: white;
+	font-size: 29px;
+	}
+	
+/*pour ajuster la taille des modales*/
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
+
+.photoWithFriendsClass {
+	height: 350px;
+	overflow: hidden;
+}
+	
+.photoWithFriendsClass img{
+	height: 100%;
+	width: auto;
+}
+
+
+.pwfpa {
+	margin-left: 35px;
+}
+
+.pwfna {
+	margin-right: 35px;
+	float: right;
+	
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,45 @@
+a, a:visited, #header .navbar-nav li a:hover, #main .main-gallery .item p, #main .main-tabs .tab-content .column-features .item h5 { color:#f8b848; }
+
+a:hover { color:#5a5a5a; } /* Don't change this attribute */
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, textarea:focus { border:3px solid #f7b647; }
+
+.btn-custom:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, button:hover, #top .top-desc .btn-custom:hover {
+	background-color:#f7b647;
+	border:3px solid rgba(0,0,0,0.1);	
+}
+
+#header .navbar-nav li a.selected {
+	color:#919191;
+	border-top:2px solid #f7b647;
+}
+
+#main .main-tabs .nav-tabs > li.active > a, #main .main-tabs .nav-tabs > li.active > a:hover, #main .main-tabs .nav-tabs > li.active > a:focus {
+	background-color:#949494;
+	border:1px solid #949494;
+	border-left:0px;
+}
+#main .main-tabs .nav-tabs > li:first-child.active > a, #main .main-tabs .nav-tabs > li:first-child.active > a:hover, #main .main-tabs .nav-tabs > li:first-child.active > a:focus { border-left:1px solid #f7b647 !important; }
+#main .main-tabs .tab-content .column-text h4, #main .main-tabs .tab-content .column-form h4 { border-left:2px solid #f7b647;}
+
+.social-media a {
+	color: rgba(126,126,126,0.7) !important;
+}
+
+#fb_icon a:hover {
+	color: rgba(59, 81, 170, 0.9) !important;
+}
+
+#tw_icon a:hover {
+	color: rgba(76,203,223,0.9) !important;
+}
+
+#g_icon a:hover {
+	color: rgba(218,83,83,0.9) !important;
+}
+
+#in_icon a:hover {
+	color: rgba(4,113,163,0.9) !important;
+}
+
+
