@@ -188,7 +188,6 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
   	queryInvitations.count({
 	  success: function(count) {
 	    // The count request succeeded. Show the count
-	    alert("Sean has played " + count + " games");
 
 	    //If more than one invitation, send push
 	    if(count >0){
@@ -199,16 +198,19 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 
 			var message;
 			if (count>1) {
-				message = count+" invitations à des évènements en attente de réponse";
+				message = "PushNotifs_InvitationsMany"
 			}
 			else{
-				message = "Une invitation à un évènement en attente de réponse";
+				message = "PushNotifs_InvitationsOne";
 			}
 
 			Parse.Push.send({
 				where: query, // Set our Installation query
 				data: {
-				    alert: message,
+				    alert: {
+				    	"loc-key" : message,
+				    	"loc-args" : [count]
+				    },
 				    badge: "Increment",
 				    type: 0
 				}
@@ -245,4 +247,86 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
   });
 
 });
+
+
+
+//Remove invitation prospect when create invitation for the same event for a user
+Parse.Cloud.afterSave("Invitation", function(request) {
+
+	//It is an invitation for a user
+	if (request.object.get("user")) {
+		console.log(request.object.get("user").id)
+
+		//Get the user
+		var query = new Parse.Query("User");
+		query.get(request.object.get("user").id, {
+		    success: function(user) {
+		      console.log("User facebook Id : "+user.get("facebookId"));
+
+		      //Get the prospect
+		      var Prospect = Parse.Object.extend("Prospect");
+		      var queryProspect = new Parse.Query(Prospect);
+		      queryProspect.equalTo("facebookId", user.get("facebookId"));
+		      queryProspect.first({
+		      	success: function(prospect){
+
+		      		if (prospect) {
+		      			console.log(prospect.id);
+
+		      			//Got the prospect, find invitation to this event with this prospect
+			      		var Invitation = Parse.Object.extend("Invitation");
+					    var queryInvitation = new Parse.Query(Invitation);
+					    queryInvitation.exists("prospect");
+					    queryInvitation.doesNotExist("user");
+					    queryInvitation.equalTo("prospect", prospect);
+					    queryInvitation.equalTo("event", request.object.get("event"));
+
+					    queryInvitation.first({
+					    	success: function(invit){
+					    		console.log("found invit");
+					    		invit.destroy({
+								  success: function(myObject) {
+								    console.log("Deleted one invitation from prospect");
+								  },
+								  error: function(myObject, error) {
+								    // The delete failed.
+								    console.log("Error when deleting one invitation from prospect : "+error.message);
+								  }
+								});
+					    	},
+					    	error: function(error){
+					    	}
+					    });
+		      		};
+		      		
+		      	},
+		      	error: function(error){
+		      		console.error("Got an error " + error.code + " : " + error.message);
+		      	}
+		      });
+
+		      //Get invitation to this event for a prospect with this facebookId
+		      var Invitation = Parse.Object.extend("Invitation");
+		      var queryInvitation = new Parse.Query(Invitation);
+		      queryInvitation.equalTo("prospect")
+
+
+		    },
+		    error: function(error) {
+		      console.error("Got an error " + error.code + " : " + error.message);
+		    }
+		});
+	};
+
+});
+
+
+
+
+
+
+
+
+
+
 
