@@ -168,7 +168,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	var today = new Date();
 
 	//only on sunday
-	if(today.getDay() == 1){
+	if(today.getDay() == 5){
 		var query = new Parse.Query(Parse.User);
 	  query.each(function(user) {
 	  	console.log("userId = " + user.id);
@@ -198,6 +198,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 		    	var query = new Parse.Query(Parse.Installation);
 				query.equalTo('owner', user);
 				query.equalTo("is_push_notif", true);
+				query.notEqualTo("appVersion", "1.0");
 				//query.notEqualTo("appVersion", "1.0");
 
 				var message;
@@ -249,6 +250,9 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	  }, function (error) {
 	    status.error(error.message);
 	  });
+	}
+	else{
+		status.success('No need to be done');
 	}
 
   
