@@ -168,10 +168,9 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	var today = new Date();
 
 	//only on sunday
-	if(today.getDay() == 5){
+	if(today.getDay() == 0){
 		var query = new Parse.Query(Parse.User);
 	  query.each(function(user) {
-	  	console.log("userId = " + user.id);
 
 	  	//Event query
 	  	var Event = Parse.Object.extend("Event");
@@ -223,7 +222,6 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 				{
 					success: function() {
 					    // Push was successful
-					    console.log("Push envoyés !");
 					    promise.resolve('Push Sent');
 					},
 					error: function(error) {
