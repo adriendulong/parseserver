@@ -165,84 +165,177 @@ Parse.Cloud.define("pushnewlike", function(request, response) {
 // SEND Notificitaions concerning invitations
 
 Parse.Cloud.job("pushInvitation", function(request, status) {
-  var query = new Parse.Query(Parse.User);
-  query.each(function(user) {
-  	console.log("userId = " + user.id);
+	var today = new Date();
 
-  	//Event query
-  	var Event = Parse.Object.extend("Event");
-  	var queryEvent = new Parse.Query(Event)
-  	queryEvent.greaterThan("start_time", new Date());
+	//only on sunday
+	if(today.getDay() == 0){
+		var query = new Parse.Query(Parse.User);
+	  query.each(function(user) {
 
-  	//Get invitations
-  	var Invitation = Parse.Object.extend("Invitation");
-  	var queryInvitations = new Parse.Query(Invitation)
-  	queryInvitations.matchesQuery("event", queryEvent);
-  	queryInvitations.equalTo("rsvp_status", "not_replied");
-  	queryInvitations.equalTo("user", user);
+	  	//Event query
+	  	var Event = Parse.Object.extend("Event");
+	  	var queryEvent = new Parse.Query(Event)
+	  	queryEvent.greaterThan("start_time", new Date());
+
+	  	//Get invitations
+	  	var Invitation = Parse.Object.extend("Invitation");
+	  	var queryInvitations = new Parse.Query(Invitation)
+	  	queryInvitations.matchesQuery("event", queryEvent);
+	  	queryInvitations.equalTo("rsvp_status", "not_replied");
+	  	queryInvitations.equalTo("user", user);
 
 
-  	//promise
-  	var promise = new Parse.Promise();
+	  	//promise
+	  	var promise = new Parse.Promise();
 
-  	queryInvitations.count({
-	  success: function(count) {
-	    // The count request succeeded. Show the count
-	    alert("Sean has played " + count + " games");
+	  	queryInvitations.count({
+		  success: function(count) {
+		    // The count request succeeded. Show the count
 
-	    //If more than one invitation, send push
-	    if(count >0){
-	    	var query = new Parse.Query(Parse.Installation);
-			query.equalTo('owner', user);
-			query.equalTo("is_push_notif", true);
-			//query.notEqualTo("appVersion", "1.0");
+		    //If more than one invitation, send push
+		    if(count >0){
+		    	var query = new Parse.Query(Parse.Installation);
+				query.equalTo('owner', user);
+				query.equalTo("is_push_notif", true);
+				query.notEqualTo("appVersion", "1.0");
+				//query.notEqualTo("appVersion", "1.0");
 
-			var message;
-			if (count>1) {
-				message = count+" invitations à des évènements en attente de réponse";
-			}
-			else{
-				message = "Une invitation à un évènement en attente de réponse";
-			}
-
-			Parse.Push.send({
-				where: query, // Set our Installation query
-				data: {
-				    alert: message,
-				    badge: "Increment",
-				    type: 0
+				var message;
+				if (count>1) {
+					message = "PushNotifs_InvitationsMany"
 				}
-			}, 
-			{
-				success: function() {
-				    // Push was successful
-				    console.log("Push envoyés !");
-				    promise.resolve('Push Sent');
-				},
-				error: function(error) {
-				    console.log("Error :"+error.message);
-				    promise.reject(error); 
+				else{
+					message = "PushNotifs_InvitationsOne";
 				}
-			});
-	    }
-	    else{
-	    	promise.resolve('No invitation');
-	    }
 
-	  },
-	  error: function(error) {
-	    // The request failed
-	    promise.reject(error); 
-	  }
-	});
+				Parse.Push.send({
+					where: query, // Set our Installation query
+					data: {
+					    alert: {
+					    	"loc-key" : message,
+					    	"loc-args" : [count]
+					    },
+					    badge: "Increment",
+					    type: 0
+					}
+				}, 
+				{
+					success: function() {
+					    // Push was successful
+					    promise.resolve('Push Sent');
+					},
+					error: function(error) {
+					    console.log("Error :"+error.message);
+					    promise.reject(error); 
+					}
+				});
+		    }
+		    else{
+		    	promise.resolve('No invitation');
+		    }
 
-	return promise;
+		  },
+		  error: function(error) {
+		    // The request failed
+		    promise.reject(error); 
+		  }
+		});
 
-  }).then(function(){
-    status.success('Done');
-  }, function (error) {
-    status.error(error.message);
-  });
+		return promise;
+
+	  }).then(function(){
+	    status.success('Done');
+	  }, function (error) {
+	    status.error(error.message);
+	  });
+	}
+	else{
+		status.success('No need to be done');
+	}
+
+  
 
 });
+
+
+
+//Remove invitation prospect when create invitation for the same event for a user
+Parse.Cloud.afterSave("Invitation", function(request) {
+
+	//It is an invitation for a user
+	if (request.object.get("user")) {
+		console.log(request.object.get("user").id)
+
+		//Get the user
+		var query = new Parse.Query("User");
+		query.get(request.object.get("user").id, {
+		    success: function(user) {
+		      console.log("User facebook Id : "+user.get("facebookId"));
+
+		      //Get the prospect
+		      var Prospect = Parse.Object.extend("Prospect");
+		      var queryProspect = new Parse.Query(Prospect);
+		      queryProspect.equalTo("facebookId", user.get("facebookId"));
+		      queryProspect.first({
+		      	success: function(prospect){
+
+		      		if (prospect) {
+		      			console.log(prospect.id);
+
+		      			//Got the prospect, find invitation to this event with this prospect
+			      		var Invitation = Parse.Object.extend("Invitation");
+					    var queryInvitation = new Parse.Query(Invitation);
+					    queryInvitation.exists("prospect");
+					    queryInvitation.doesNotExist("user");
+					    queryInvitation.equalTo("prospect", prospect);
+					    queryInvitation.equalTo("event", request.object.get("event"));
+
+					    queryInvitation.first({
+					    	success: function(invit){
+					    		console.log("found invit");
+					    		invit.destroy({
+								  success: function(myObject) {
+								    console.log("Deleted one invitation from prospect");
+								  },
+								  error: function(myObject, error) {
+								    // The delete failed.
+								    console.log("Error when deleting one invitation from prospect : "+error.message);
+								  }
+								});
+					    	},
+					    	error: function(error){
+					    	}
+					    });
+		      		};
+		      		
+		      	},
+		      	error: function(error){
+		      		console.error("Got an error " + error.code + " : " + error.message);
+		      	}
+		      });
+
+		      //Get invitation to this event for a prospect with this facebookId
+		      var Invitation = Parse.Object.extend("Invitation");
+		      var queryInvitation = new Parse.Query(Invitation);
+		      queryInvitation.equalTo("prospect")
+
+
+		    },
+		    error: function(error) {
+		      console.error("Got an error " + error.code + " : " + error.message);
+		    }
+		});
+	};
+
+});
+
+
+
+
+
+
+
+
+
+
 

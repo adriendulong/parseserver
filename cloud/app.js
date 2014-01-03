@@ -46,6 +46,17 @@ app.get('/process-contact.php', function(req, res) {
 res.redirect('http://www.woovent.com/process-contact.php');
 });
 
+app.get('/cgu/:lg', function(req, res) {
+	console.log("Lang : "+req.params.lg);
+	if (req.params.lg == "fr") {
+		res.render("cgu");
+	}
+	else{
+		res.render("cgu_en");
+	}
+	
+});
+
 //on a les pages event au /f/id
 app.get('/e/:idevent', function(req, res) {
 	var idEvent = req.params.idevent;
