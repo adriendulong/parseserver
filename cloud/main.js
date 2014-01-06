@@ -264,13 +264,11 @@ Parse.Cloud.afterSave("Invitation", function(request) {
 
 	//It is an invitation for a user
 	if (request.object.get("user")) {
-		console.log(request.object.get("user").id)
 
 		//Get the user
 		var query = new Parse.Query("User");
 		query.get(request.object.get("user").id, {
 		    success: function(user) {
-		      console.log("User facebook Id : "+user.get("facebookId"));
 
 		      //Get the prospect
 		      var Prospect = Parse.Object.extend("Prospect");
@@ -326,6 +324,38 @@ Parse.Cloud.afterSave("Invitation", function(request) {
 		    }
 		});
 	};
+
+});
+
+
+//Don't duplicate events
+
+Parse.Cloud.beforeSave("Event", function(request, response) {
+
+	//The app is trying to create the event
+	if (!request.object.id) {
+		var Event = Parse.Object.extend("Event");
+		var query = new Parse.Query(Event);
+		query.equalTo("eventId", request.object.get("eventId"))
+
+		query.count({
+			success: function(count) {
+				if(count>0){
+					response.error("The event already exists");
+				}
+				else{
+					response.success();
+				}
+			},
+			error: function(results){
+				response.error("Can't get the count");
+			}
+		});
+	}
+	else{
+		response.success();
+	}
+	
 
 });
 
