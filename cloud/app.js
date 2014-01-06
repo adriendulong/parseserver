@@ -1,7 +1,7 @@
 // These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
 var app = express();
-
+ 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
 app.set('view engine', 'ejs');    // Set the template engine
@@ -46,6 +46,7 @@ app.get('/process-contact.php', function(req, res) {
 res.redirect('http://www.woovent.com/process-contact.php');
 });
 
+/*
 app.get('/cgu/:lg', function(req, res) {
 	console.log("Lang : "+req.params.lg);
 	if (req.params.lg == "fr") {
@@ -56,13 +57,17 @@ app.get('/cgu/:lg', function(req, res) {
 	}
 	
 });
+*/
 
-//on a les pages event au /f/id
+
+//Page event
 app.get('/e/:idevent', function(req, res) {
 	var idEvent = req.params.idevent;
 	console.log("Id event"+idEvent);
 	
-	var eventUrl = "https://www.woovent.com/e/" + idEvent;
+	var eventUrl = "https://moment.parseapp.com/e/" + idEvent;
+	
+	var photoUrl = "";
 	
 	//Get the event with its id
 	var Event = Parse.Object.extend("Event");
@@ -77,10 +82,13 @@ app.get('/e/:idevent', function(req, res) {
 		queryPhoto.first({
 		  success: function(photo) {
 		    //We have at least one photo
-		    if(photo.get("facebookId")==null){
-		    	var photoUrl = photo.get("full_image").url();
-		    }else{
-		    	var photoUrl = photo.get("facebook_url_full");
+		    if(photo.get("facebookId")!=null){
+		    	 photoUrl = photo.get("facebook_url_full");
+		    }else if (photo.get("full_image")!=null){
+		   
+		    	 photoUrl = photo.get("full_image").url();
+		    } else {
+			     photoUrl = "urlphotodefault";
 		    }
 
 		    res.render('eventview', { eventObject: event, photoUrl : photoUrl, eventId : idEvent, eventUrl : eventUrl});
@@ -96,6 +104,15 @@ app.get('/e/:idevent', function(req, res) {
 		    
 		  }
 		});
+	 //si on a trouvé aucune photo
+	 if (photoUrl == ""){
+		 	if (event.get("cover")!=null){
+		    	res.render('eventview', { eventObject: event, photoUrl : event.get("cover"),eventId : idEvent, eventUrl : eventUrl});
+		    }
+		    else {
+			    res.render('eventview', { eventObject: event, photoUrl : "",eventId : idEvent, eventUrl : eventUrl});
+		    }
+	 }
 
 
 	  },
@@ -104,7 +121,7 @@ app.get('/e/:idevent', function(req, res) {
 		    res.send("Cannot get the event");
 		 }
 	});
-   
- });
+
+});
 // Attach the Express app to Cloud Code.
 app.listen();
