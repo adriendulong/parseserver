@@ -65,7 +65,7 @@ app.get('/e/:idevent', function(req, res) {
 	var idEvent = req.params.idevent;
 	console.log("Id event"+idEvent);
 	
-	var eventUrl = "https://moment.parseapp.com/e/" + idEvent;
+	var eventUrl = "https://www.woovent.com/e/" + idEvent;
 	
 	var photoUrl = "";
 	
