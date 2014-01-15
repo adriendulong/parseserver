@@ -68,7 +68,15 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png">
 	
-
+<!--Start of Zopim Live Chat Script-->
+<script type="text/javascript">
+window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
+$.src='//v2.zopim.com/?1pQWJJHKxo4Lc4b5GNmXzbMVNK7wtuxO';z.t=+new Date;$.
+type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
+</script>
+<!--End of Zopim Live Chat Script-->
     
 </head>
 
@@ -458,6 +466,50 @@
 		</div>
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51fceefb2f5ad1e7"></script>
 		<!-- AddThis Button END -->
+		
+				<script>
+		// Include the UserVoice JavaScript SDK (only needed once on a page)
+		UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/WBu9NK2XP2NXeGUDeGNLQ.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+		
+		//
+		// UserVoice Javascript SDK developer documentation:
+		// https://www.uservoice.com/o/javascript-sdk
+		//
+		
+		// Set colors
+		UserVoice.push(['set', {
+		  accent_color: '#e2753a',
+		  trigger_color: 'white',
+		  trigger_background_color: '#6aba2e'
+		}]);
+		
+		// Identify the user and pass traits
+		// To enable, replace sample data with actual user traits and uncomment the line
+		UserVoice.push(['identify', {
+		  //email:      'john.doe@example.com', // User’s email address
+		  //name:       'John Doe', // User’s real name
+		  //created_at: 1364406966, // Unix timestamp for the date the user signed up
+		  //id:         123, // Optional: Unique id of the user (if set, this should not change)
+		  //type:       'Owner', // Optional: segment your users by type
+		  //account: {
+		  //  id:           123, // Optional: associate multiple users with a single account
+		  //  name:         'Acme, Co.', // Account name
+		  //  created_at:   1364406966, // Unix timestamp for the date the account was created
+		  //  monthly_rate: 9.99, // Decimal; monthly rate of the account
+		  //  ltv:          1495.00, // Decimal; lifetime value of the account
+		  //  plan:         'Enhanced' // Plan name for the account
+		  //}
+		}]);
+		
+		// Add default trigger to the bottom-right corner of the window:
+		UserVoice.push(['addTrigger', { mode: 'smartvote', trigger_position: 'bottom-right' }]);
+		
+		// Or, use your own custom trigger:
+		//UserVoice.push(['addTrigger', '#id', { mode: 'smartvote' }]);
+		
+		// Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
+		UserVoice.push(['autoprompt', {}]);
+		</script>
     
 </body>
 </html>
