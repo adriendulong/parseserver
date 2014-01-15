@@ -151,6 +151,66 @@ Parse.Cloud.define("pushnewlike", function(request, response) {
 });
 
 
+////////////
+// PUSH NEW PHOTO COMMENT
+////////////
+
+Parse.Cloud.define("pushnewcomment", function(request, response) {
+	var photoId = request.params.photoid;
+
+	///////////////////
+	//// GET PHOTO ////
+	///////////////////
+
+
+	var Photo = Parse.Object.extend("Photo");
+	var queryPhoto = new Parse.Query(Photo);
+	queryPhoto.include("user");
+	queryPhoto.notEqualTo("user", request.user);
+	queryPhoto.exists("user")
+	queryPhoto.get(photoId, {
+	  success: function(photo) {
+
+	  		//If not a photo from FB or from a user using the app
+	  		if(photo.get("user")!=null){
+	  			var query = new Parse.Query(Parse.Installation);
+				query.equalTo('owner', photo.get("user"));
+				query.equalTo("is_push_notif", true);
+				query.notEqualTo("appVersion", "1.0");
+				query.notEqualTo("appVersion", "1.0.1");
+
+				Parse.Push.send({
+				  where: query, // Set our Installation query
+				  data: {
+				    alert: {
+				    	"loc-key" : "PushNotifs_NewComment",
+				    	"loc-args" : [request.user.get("name")]
+				    },
+				    badge: "Increment",
+				    p: photo.id
+				  }
+				}, {
+				  success: function() {
+				    // Push was successful
+				    console.log("Push envoyés !");
+				    response.success("PUSH sent");
+				  },
+				  error: function(error) {
+				    console.log("Error :"+error.message);
+				    response.error("probleme sending pushs "+error.code+" Infos : "+error.message);
+				  }
+				});
+	  		}
+
+	   },
+	  error: function(object, error) {
+	    response.error("Cannot get the photo");
+	  }
+	});
+});
+
+
+
 
 
 
