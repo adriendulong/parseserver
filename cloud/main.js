@@ -157,6 +157,7 @@ Parse.Cloud.define("pushnewlike", function(request, response) {
 
 Parse.Cloud.define("pushnewcomment", function(request, response) {
 	var photoId = request.params.photoid;
+	var commentMessage = request.params.comment;
 
 	///////////////////
 	//// GET PHOTO ////
@@ -166,40 +167,88 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 	var Photo = Parse.Object.extend("Photo");
 	var queryPhoto = new Parse.Query(Photo);
 	queryPhoto.include("user");
-	queryPhoto.notEqualTo("user", request.user);
+	//queryPhoto.notEqualTo("user", request.user);
 	queryPhoto.exists("user")
 	queryPhoto.get(photoId, {
 	  success: function(photo) {
 
 	  		//If not a photo from FB or from a user using the app
 	  		if(photo.get("user")!=null){
-	  			var query = new Parse.Query(Parse.Installation);
-				query.equalTo('owner', photo.get("user"));
-				query.equalTo("is_push_notif", true);
-				query.notEqualTo("appVersion", "1.0");
-				query.notEqualTo("appVersion", "1.0.1");
 
-				Parse.Push.send({
-				  where: query, // Set our Installation query
-				  data: {
-				    alert: {
-				    	"loc-key" : "PushNotifs_NewComment",
-				    	"loc-args" : [request.user.get("name")]
-				    },
-				    badge: "Increment",
-				    p: photo.id
-				  }
-				}, {
-				  success: function() {
-				    // Push was successful
-				    console.log("Push envoyés !");
-				    response.success("PUSH sent");
+	  			//Get the users of the comment
+	  			var comments = photo.get("comments");
+	  			var ids = [];
+	  			
+	  			for(var i=0;i<comments.length;i++){
+	  				ids.push(comments[i]["id"]);
+	  			}
+
+
+				var queryUsers = new Parse.Query(Parse.User);
+	  			queryUsers.containedIn("objectId", ids);
+
+	  			queryUsers.find({ 
+				  success: function(results) {
+
+				    var alreadyOwner = false;
+				    var allUser = [];
+				    for(var j=0;j<results.length;j++){
+				    	if (results[j].id == photo.get("user").id) {
+				    		alreadyOwner = true;
+				    	}
+				    	if (results[j].id != request.user.id) {
+				    		allUser.push(results[j]);
+				    	}
+				    	
+				    }
+				    if(!alreadyOwner){
+				    	allUser.push(photo.get("user"));
+				    }
+
+
+				    //Push
+		  			var query = new Parse.Query(Parse.Installation);
+					query.containedIn('owner', allUser);
+					query.equalTo("is_push_notif", true);
+					query.notEqualTo("appVersion", "1.0");
+					query.notEqualTo("appVersion", "1.0.1");
+
+					//[request.user.get("name")
+					var messagePush;
+					if(commentMessage.length >100){
+						commentMessage.substring(0,100);
+						messagePush = request.user.get("first_name")+' : "'+commentMessage+'..."';
+					}
+					else{
+						messagePush = request.user.get("first_name")+' : "'+commentMessage+'"';
+					}
+
+					Parse.Push.send({
+					  where: query, // Set our Installation query
+					  data: {
+					    alert: messagePush,
+					    badge: "Increment",
+					    p: photo.id
+					  }
+					}, {
+					  success: function() {
+					    // Push was successful
+					    console.log("Push envoyés !");
+					    response.success("PUSH sent");
+					  },
+					  error: function(error) {
+					    console.log("Error :"+error.message);
+					    response.error("probleme sending pushs "+error.code+" Infos : "+error.message);
+					  }
+					});
 				  },
-				  error: function(error) {
-				    console.log("Error :"+error.message);
+				  error: function(error){
+				  	console.log("Error :"+error.message);
 				    response.error("probleme sending pushs "+error.code+" Infos : "+error.message);
 				  }
 				});
+
+
 	  		}
 
 	   },
