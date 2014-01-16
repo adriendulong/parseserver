@@ -369,6 +369,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 
 
 //Remove invitation prospect when create invitation for the same event for a user
+/*
 Parse.Cloud.afterSave("Invitation", function(request) {
 
 	//It is an invitation for a user
@@ -467,7 +468,7 @@ Parse.Cloud.beforeSave("Event", function(request, response) {
 	
 
 });
-
+*/
 
 
 
