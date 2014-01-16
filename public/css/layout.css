@@ -839,6 +839,10 @@ figure.figure-hover { position:relative; }
 	
 	#top figure { padding:0px 50px; }
 	
+	/* On cache uservoice et zopim pour le mobile */
+	.zopim { display : none;}
+	.uv-icon { display : none;}
+	
 	#main .subscribe input[type="text"] { width:100%; }
 	#main .subscribe input[type="submit"] {
 		width:100%;
@@ -852,12 +856,6 @@ figure.figure-hover { position:relative; }
 @media (max-width: 480px) {
 	
 	#top figure { padding:0px 30px; }
-		
-}
-
-@media (max-width: 400px) {
-	
-	#top figure { padding:0px 10px; }
 		
 }
 
