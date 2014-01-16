@@ -840,8 +840,8 @@ figure.figure-hover { position:relative; }
 	#top figure { padding:0px 50px; }
 	
 	/* On cache uservoice et zopim pour le mobile */
-	.zopim { display : none;}
-	.uv-icon { display : none;}
+	.zopim { display : none !important;}
+	.uv-icon { display : none !important ;}
 	
 	#main .subscribe input[type="text"] { width:100%; }
 	#main .subscribe input[type="submit"] {
