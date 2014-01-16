@@ -14,6 +14,21 @@ var querystring = require('querystring');
 app.post('/', function(req, res) {
    res.redirect('/');
  });
+ 
+//on redirige selon la langue du nav
+app.get('/', function(req, res) {
+
+     var userLang = req.acceptedLanguages; 
+     var userLangFirst = userLang[0];
+	 console.log("The userLangFirst is: " + userLangFirst);
+	 if (userLangFirst == "fr" || userLangFirst == "fr-fr" || userLangFirst == "FR" || userLangFirst == "fr-FR" || userLangFirst == "fr-be" || userLangFirst == "fr-ca" || userLangFirst == "fr-lu" || userLangFirst == "fr-mc" || userLangFirst == "fr-ch"){
+		 res.redirect('/fr');
+	 }else {
+		 res.redirect('/en');
+	 }
+
+
+});
 
 app.get('/testimage', function(req, res) {
 	var Buffer = require('buffer').Buffer;

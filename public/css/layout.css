@@ -348,7 +348,7 @@ figure.figure-hover { position:relative; }
 /* ========================= Top ========================= */
 
 #top {
-	background:#404040 url(../images/base-top6.jpg) no-repeat center top;
+	background:#404040 url(../images/base-top4flou.jpg) no-repeat center top;
 	background-size:cover;
 	color:#FFF;
 }
@@ -356,7 +356,7 @@ figure.figure-hover { position:relative; }
 		background:url(../images/base-top-overlay.png) repeat;
 		padding-top:120px;
 	}
-	#top .top-desc { margin-top:180px; }
+	#top .top-desc { margin-top:50px; margin-bottom: 60px; }
 		#top .top-desc h1 {
 			color:#FFF;
 			font-size:42px;
@@ -398,7 +398,7 @@ figure.figure-hover { position:relative; }
 .sep-border-top {
 	height:12px;
 	background:url(../images/border-top.png) repeat-x;
-	margin-bottom:40px;
+	margin-bottom:0px;
 }
 
 
