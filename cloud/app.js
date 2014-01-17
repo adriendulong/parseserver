@@ -51,11 +51,6 @@ app.get('/testimage', function(req, res) {
    
  });
 
-//on redirige en attendant vers la home
-app.get('/f/:idevent', function(req, res) {
-res.redirect('/');
-});
-
 //on redirige pour le formulaire de contact
 app.get('/process-contact.php', function(req, res) {
 res.redirect('http://www.woovent.com/process-contact.php');
@@ -133,7 +128,7 @@ app.get('/e/:idevent', function(req, res) {
 	  },
 	  error: function() {
 		    //console.log("Error: "+ error.message);
-		    res.send("Cannot get the event");
+		    res.redirect('/404/');
 		 }
 	});
 
