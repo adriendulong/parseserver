@@ -12,6 +12,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 #header .navbar-nav li a.selected {
 	color:#919191;
 	border-top:2px solid #f7b647;
+	font-weight: bold;
 }
 
 #main .main-tabs .nav-tabs > li.active > a, #main .main-tabs .nav-tabs > li.active > a:hover, #main .main-tabs .nav-tabs > li.active > a:focus {

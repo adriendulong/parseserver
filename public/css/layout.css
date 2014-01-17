@@ -356,7 +356,7 @@ figure.figure-hover { position:relative; }
 		background:url(../images/base-top-overlay.png) repeat;
 		padding-top:120px;
 	}
-	#top .top-desc { margin-top:50px; margin-bottom: 60px; }
+	#top .top-desc { margin-top:175px; margin-bottom: 60px; }
 		#top .top-desc h1 {
 			color:#FFF;
 			font-size:42px;
