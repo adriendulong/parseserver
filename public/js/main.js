@@ -34,11 +34,9 @@ Parse.FacebookUtils.logIn("email,user_events,user_about_me,user_birthday,user_lo
 
 		//si le user existait on redirige direct vers le dashboard
 	    } else {
-	      console.log("\n ***** User logged in through Facebook! ***** \n");
-	      console.log(user);
-	      
-		  //on dirige vers le dashboard
-		  window.location.href = "//www.woovent.com/app/";
+	      $(".user_first_name").empty();
+	      $(".user_first_name").append(user.attributes.first_name);
+		  $('#facebookLoginComingSoon').modal('show');
 	    }
 	    //on cache le bouton login on affiche le logout
 	    $(".btn-login").hide();
@@ -57,6 +55,10 @@ function createUserAccount(parseCurrentUser){
 	
 	//on va recup les infos
 	FB.api("/me", function(response) {
+	
+			$(".user_first_name").empty();
+			$(".user_first_name").append(response.first_name);
+			
 		
 		    // do stuff with the user
 		    if (response.email){
@@ -95,8 +97,7 @@ function createUserAccount(parseCurrentUser){
 				    // Execute any logic that should take place after the object is saved.
 				    console.log('\n ***** User information update with success **** \n');
 				    
-					//on dirige vers le dashboard
-					window.location.href = "//www.woovent.com/app/";
+					$('#facebookLoginComingSoon').modal('show');
 
 				  },
 				  error: function(parseUserSaved, error) {
