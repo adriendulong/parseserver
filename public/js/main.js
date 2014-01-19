@@ -23,7 +23,7 @@ function isUserConnected(){
 *************************************/
 function fblogin() {
 	//on appel le login de parse et demande les bonnes autorisations
-Parse.FacebookUtils.logIn("email,user_events,user_about_me,user_birthday,user_location,user_photos,friends_photos", {
+Parse.FacebookUtils.logIn("email,user_about_me,user_birthday,user_location", {
 	  success: function(user) {
 	  
 	  	//si le user nexistait pas on le crée
@@ -38,9 +38,7 @@ Parse.FacebookUtils.logIn("email,user_events,user_about_me,user_birthday,user_lo
 	      $(".user_first_name").append(user.attributes.first_name);
 		  $('#facebookLoginComingSoon').modal('show');
 	    }
-	    //on cache le bouton login on affiche le logout
-	    $(".btn-login").hide();
-		$(".btn-logged-in").show();
+
 	  },
 	  error: function(user, error) {
 	    console.log("\n !!!!! User cancelled the Facebook login or did not fully authorize. !!!!! \n");
