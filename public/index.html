@@ -5,6 +5,15 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 
 <head>
+
+	 <script>
+         var userLang = navigator.language || navigator.userLanguage; 
+		 console.log("The language is: " + userLang);
+		 if (userLang == "fr" || userLang == "fr-fr"){
+		 	window.location.href = "https://www.woovent.com/fr/";
+		 }
+        </script>
+
 	<meta name="google-site-verification" content="mH5Xo5LMFpwCq_GA2J3FOx9mGn0MP-AN57I4bOjzfRQ" />
 	
 	<!-- Site Infos -->

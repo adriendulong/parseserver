@@ -15,7 +15,7 @@ app.post('/', function(req, res) {
    res.redirect('/');
  });
  
-//on redirige selon la langue du nav
+/*on redirige selon la langue du nav
 app.get('/', function(req, res) {
 
      var userLang = req.acceptedLanguages; 
@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
 	 }
 
 
-});
+});*/
 
 app.get('/testimage', function(req, res) {
 	var Buffer = require('buffer').Buffer;
