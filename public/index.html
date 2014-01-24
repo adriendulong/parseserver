@@ -139,7 +139,7 @@ type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
                         <p class="hidden-xs hidden-sm">Woovent helps you view your upcoming events easily, RSVP to your invites quickly, find your past events again and enjoy your events by collecting all pictures for each of them.</p>
                         <div class="btn-section">
                             <a href="https://itunes.apple.com/us/app/woovent/id781588768" target="_blank" class="btn-custom btn-custom-default" style="background-color: rgba(170, 170, 170, 0.91); margin-top : -5px;"><i class="icon-apple"></i>Download the app</a>
-                            <a href="#" onclick="" class="btn-custom btn-custom-default" style="background-color: rgba(59, 81, 170, 0.9);"><i class="icon-facebook"></i>Coming Soon !</a>
+                            <a href="#" onclick="fblogin()" class="btn-custom btn-custom-default" style="background-color: rgba(59, 81, 170, 0.9);color : white !important; "><i class="icon-facebook"></i> &nbsp; Try it for Free !</a>
                         </div>
                     </div>
                     
@@ -285,7 +285,7 @@ type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
 	                                It’s free, you only have to click here!
 	                                </p>
 	                                <div class="btn-section">
-	                                    <a href="#" class="btn-custom btn-custom-default" style="background-color: rgba(59, 81, 170, 0.9);color : white !important; "><i class="icon-facebook"></i> &nbsp Coming soon !</a>
+	                                    <a href="#" onclick="fblogin()" class="btn-custom btn-custom-default" style="background-color: rgba(59, 81, 170, 0.9);color : white !important; "><i class="icon-facebook"></i> &nbsp; Try it for Free !</a>
 	                                </div>
                                 </div>
                                 
@@ -529,6 +529,88 @@ type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
 		// Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
 		UserVoice.push(['autoprompt', {}]);
 		</script>
+
+
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Modal Login Facebook
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>        
+<!-- Modal -->
+<div class="modal fade modal-wide" id="facebookLoginComingSoon" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"><center> Welcome on board !</center></h4>
+      </div>
+      	<div class="modal-body ">
+		  	
+		  <div class="row">
+		  
+		  	<div class="hidden-xs hidden-sm col-md-4 col-lg-4 ">
+		  	<img src="../images/woovent_chill.png" alt="With Woovent, your Facebook Event become easy and cool !" class="img-responsive" /></a>
+		  	
+		  	
+		  	</div>
+		  
+		  	<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 ">
+				 		
+					<br />
+					<p> We are about to launch the services<br />
+					As soon as it will be live (february) we'll send you a notification !<br />
+					
+					Thanks for your  help, for any question ask us anything at <a href="mailto : remi@woovent.com"> remi@woovent.com </a>
+
+		  	</div>
+		  	
+		 </div>
+		 
+		 <br />
+		 
+		 <div class="row">
+		 
+		 	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
+		 	
+		 			<center>
+		 	
+		 			<strong>Follow us  </strong> to be aware :</p>
+		 			
+		 						
+					
+						<div class="fb-like" data-href="https://www.facebook.com/woovent" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+						
+						<br />
+						
+						<a href="https://twitter.com/wooventapp" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false">Follow @wooventapp</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		 			</center>
+		 	</div>
+		  
+		  	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
+					
+					<center>
+					<p> <span class="user_first_name"></span>  <strong>help us</strong> to do it faster <br /> with your <strong> "+1" </strong> ! </p>
+					<!-- Placez cette balise où vous souhaitez faire apparaître le gadget Bouton +1. -->
+					<div class="g-plusone" data-annotation="none"></div>
+					</center>
+					
+
+					
+					<!-- Placez cette ballise après la dernière balise Bouton +1. -->
+					<script type="text/javascript">
+					  (function() {
+					    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+					    po.src = 'https://apis.google.com/js/platform.js';
+					    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					  })();
+					</script>
+		  </div>
+
+		
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --> 		
     
 </body>
 </html>
