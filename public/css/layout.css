@@ -354,7 +354,7 @@ figure.figure-hover { position:relative; }
 /* ========================= Top ========================= */
 
 #top {
-	background:#404040 url(../images/base-top4flou.jpg) no-repeat center top;
+	background:#404040 url(../images/03.png) no-repeat center top;
 	background-size:cover;
 	color:#FFF;
 }
