@@ -470,6 +470,72 @@ Parse.Cloud.beforeSave("Event", function(request, response) {
 
 
 
+//Welcome mail for new user
+/*
+Parse.Cloud.afterSave(Parse.User, function(request) {
+	console.log(request.object.get("email"));
+
+	var Mandrill = require('mandrill');
+	Mandrill.initialize('eW9iPysJRI-LBinyq_D_Hg');
+
+	Mandrill.sendEmail({
+		"from_email": "hello@appmoment.fr",
+        "from_name": "Adrien",
+	    "template_name": "welcome-mail-woovent-fr",
+	    "template_content": [
+	        {
+	            "name": "fname",
+	            "content": request.object.get("first_name")
+	        }
+	    ],
+	    "message":{
+	    	"to":[
+	    		{
+	    			"email": "adrien@woovent.fr",
+	    			"name": request.object.get("first_name")
+	    		}
+	    	]
+	    },
+		  async: true
+		},{
+		  success: function(httpResponse) {
+		    console.log(httpResponse);
+		  },
+		  error: function(httpResponse) {
+		    console.error(httpResponse);
+		  }
+		});
+
+
+	//The app is trying to create the event
+	if (!request.object.id) {
+		var Event = Parse.Object.extend("Event");
+		var query = new Parse.Query(Event);
+		query.equalTo("eventId", request.object.get("eventId"))
+
+		query.count({
+			success: function(count) {
+				if(count>0){
+					response.error("The event already exists");
+				}
+				else{
+					response.success();
+				}
+			},
+			error: function(results){
+				response.error("Can't get the count");
+			}
+		});
+	}
+	else{
+		response.success();
+	}
+	
+
+});*/
+
+
+
 
 
 
