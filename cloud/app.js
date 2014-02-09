@@ -15,6 +15,12 @@ app.post('/', function(req, res) {
    res.redirect('/');
  });
  
+ app.post('/e/:idevent', function(req, res) {
+ 	var idEvent = req.params.idevent;
+ 	var eventUrlRed = '/e/' + idEvent ;
+ 	res.redirect(eventUrlRed);
+ });
+ 
 /*on redirige selon la langue du nav
 app.get('/', function(req, res) {
 
