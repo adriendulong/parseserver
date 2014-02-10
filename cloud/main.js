@@ -275,21 +275,17 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 
 Parse.Cloud.job("pushInvitation", function(request, status) {
 	var today = new Date();
+	var pushToBeSent = 0;
 
 	//only on sunday
 	if(today.getDay() == 0){
 		var query = new Parse.Query(Parse.User);
 	  query.each(function(user) {
 
-	  	//Event query
-	  	var Event = Parse.Object.extend("Event");
-	  	var queryEvent = new Parse.Query(Event)
-	  	queryEvent.greaterThan("start_time", new Date());
-
 	  	//Get invitations
 	  	var Invitation = Parse.Object.extend("Invitation");
 	  	var queryInvitations = new Parse.Query(Invitation)
-	  	queryInvitations.matchesQuery("event", queryEvent);
+	  	queryInvitations.greaterThan("start_time", new Date());
 	  	queryInvitations.equalTo("rsvp_status", "not_replied");
 	  	queryInvitations.equalTo("user", user);
 
@@ -299,10 +295,12 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 
 	  	queryInvitations.count({
 		  success: function(count) {
+		  	console.log("Nb user invitations : "+count);
 		    // The count request succeeded. Show the count
 
 		    //If more than one invitation, send push
 		    if(count >0){
+		    	pushToBeSent++;
 		    	var query = new Parse.Query(Parse.Installation);
 				query.equalTo('owner', user);
 				query.equalTo("is_push_notif", true);
@@ -317,6 +315,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 					message = "PushNotifs_InvitationsOne";
 				}
 
+				
 				Parse.Push.send({
 					where: query, // Set our Installation query
 					data: {
@@ -338,6 +337,8 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 					    promise.reject(error); 
 					}
 				});
+
+				promise.resolve('Push Sent');
 		    }
 		    else{
 		    	promise.resolve('No invitation');
@@ -353,7 +354,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 		return promise;
 
 	  }).then(function(){
-	    status.success('Done');
+	    status.success('Done with '+pushToBeSent+" users to send");
 	  }, function (error) {
 	    status.error(error.message);
 	  });
@@ -365,7 +366,6 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
   
 
 });
-
 
 
 //Remove invitation prospect when create invitation for the same event for a user
