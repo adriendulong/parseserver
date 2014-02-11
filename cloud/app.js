@@ -81,7 +81,7 @@ app.get('/p/:idphoto', function(req, res) {
 	var idPhoto = req.params.idphoto;
 	console.log("Id photo"+idPhoto);
 	
-	var photoUrl = "https://www.woovent.com/p/" + idPhoto;
+	var photoUrl = "http://www.woovent.com/p/" + idPhoto;
 	
 	var photoSrc = "";
 	
@@ -95,16 +95,16 @@ app.get('/p/:idphoto', function(req, res) {
 	  success: function(photo) {
 	  
 	  	var user = photo.get("user");
-	  	if (user.attributes.pictureURL !=null) {
+	  	if (user) {
 	  		var userProfilPicUrl = user.attributes.pictureURL;
 	  	} else {
-			var userProfilPicUrl = ""; 	
+			var userProfilPicUrl = "http://www.woovent.com/images/icon_woovent512.png"; 	
 	  	}
 	  	
-	  	if (user.attributes.name !=null) {
+	  	if (user) {
 	  		var userName = user.attributes.name;
 	  	} else {
-			var userName = ""; 	
+			var userName = "User"; 	
 	  	}
 	  	
 	  	
@@ -139,10 +139,10 @@ app.get('/p/:idphoto', function(req, res) {
 			var photoWidth = "" ;
 		}
 		
-		if (photo.get("created_time")!=null) {
-			var createdTime = photo.get("created_time") ;
+		if (photo.createdAt !=null) {
+			var createdTime = photo.createdAt ;
 		}else {
-			var createdTime = "" ;
+			var createdTime = "2014-01-01T00:00:00.871Z" ;
 		}
 		
 		res.render('photoview', { photoUrl : photoUrl, photoSrc : photoSrc, eventId : idEvent, eventUrl : eventUrl , photoWidth : photoWidth, photoHeight : photoHeight, userName : userName, userProfilPicUrl : userProfilPicUrl, idPhoto : idPhoto, createdTime : createdTime });
