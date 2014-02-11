@@ -338,7 +338,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 					}
 				});
 
-				promise.resolve('Push Sent');
+				//promise.resolve('Push Sent');
 		    }
 		    else{
 		    	promise.resolve('No invitation');
