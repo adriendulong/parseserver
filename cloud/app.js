@@ -81,7 +81,7 @@ app.get('/p/:idphoto', function(req, res) {
 	var idPhoto = req.params.idphoto;
 	console.log("Id photo"+idPhoto);
 	
-	var photoUrl = "https://moment.parseapp.com/p/" + idPhoto;
+	var photoUrl = "https://www.woovent.com/p/" + idPhoto;
 	
 	var photoSrc = "";
 	
@@ -122,7 +122,7 @@ app.get('/p/:idphoto', function(req, res) {
 		
 		if (photo.get("event")!=null) {
 			var idEvent = photo.get("event") ;
-			var eventUrl = "https://moment.parseapp.com/e/" + photo.get("event");
+			var eventUrl = "https://www.woovent.com/e/" + photo.get("event");
 		}else {
 			var idEvent = "" ;
 		}
@@ -160,7 +160,7 @@ app.get('/e/:idevent', function(req, res) {
 	var idEvent = req.params.idevent;
 	console.log("Id event"+idEvent);
 	
-	var eventUrl = "https://moment.parseapp.com/e/" + idEvent;
+	var eventUrl = "https://www.woovent.com/e/" + idEvent;
 	
 	var photoUrl = "";
 	
@@ -183,7 +183,7 @@ app.get('/e/:idevent', function(req, res) {
 		   
 		    	 photoUrl = photo.get("full_image").url();
 		    } else {
-			     photoUrl = "urlphotodefault";
+			     photoUrl = "https://www.woovent.com/images/base-top.jpg";
 		    }
 
 		    res.render('eventview', { eventObject: event, photoUrl : photoUrl, eventId : idEvent, eventUrl : eventUrl});
@@ -194,7 +194,7 @@ app.get('/e/:idevent', function(req, res) {
 		    	res.render('eventview', { eventObject: event, photoUrl : event.get("cover"),eventId : idEvent, eventUrl : eventUrl});
 		    }
 		    else {
-			    res.render('eventview', { eventObject: event, photoUrl : "",eventId : idEvent, eventUrl : eventUrl});
+			    res.render('eventview', { eventObject: event, photoUrl : "https://www.woovent.com/images/base-top.jpg",eventId : idEvent, eventUrl : eventUrl});
 		    }
 		    
 		  }
@@ -205,7 +205,7 @@ app.get('/e/:idevent', function(req, res) {
 		    	res.render('eventview', { eventObject: event, photoUrl : event.get("cover"),eventId : idEvent, eventUrl : eventUrl});
 		    }
 		    else {
-			    res.render('eventview', { eventObject: event, photoUrl : "",eventId : idEvent, eventUrl : eventUrl});
+			    res.render('eventview', { eventObject: event, photoUrl : "https://www.woovent.com/images/base-top.jpg",eventId : idEvent, eventUrl : eventUrl});
 		    }
 	 }
 

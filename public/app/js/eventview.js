@@ -283,7 +283,7 @@ function getPictureOfTheEvent (eventParseObject) {
 	 //on verifie sil existe en base un event avec le meme facebook id
 	 queryGetPhoto.equalTo("event", eventParseObject);
 	 queryGetPhoto.limit(1000);
-	 queryGetPhoto.descending("createdAt");
+	 queryGetPhoto.descending("updatedAt");
 	 
 	 //on va recuperer les photos
 	 queryGetPhoto.find({
@@ -750,8 +750,7 @@ function saveThePicture(photoToAddArray) {
 								//on essaye de poster un message sur Facebook
 								checkPublishPermission();
 								
-								//on masque la modal si on est en refresh apres un ajout
-								$('#uploadPicture').modal('hide');
+								
 							}
 							//sinon on passe à la suivante
 							else{
@@ -787,12 +786,26 @@ function saveThePicture(photoToAddArray) {
 
 function checkPublishPermission(){
 	
+	
 	//on verifie si le user a la permission de share
 	FB.api("/me/permissions", function(response) {
 	
 		//si publish stream est présent est autorisé OK
-		if(response.data[0].publish_stream == 1) {
-			postLinkOnEventWall();
+		if(response.data[0].publish_stream) {
+		
+			if(response.data[0].publish_stream == 1){
+			
+				//on masque la modal si on est en refresh apres un ajout
+				$('#uploadPicture').modal('hide');
+			
+				postLinkOnEventWall();
+				
+			}
+			else {
+				$("#photoLoading").hide();
+				$("#shareLink").show();
+			}
+			
 		}
 		else {
 			$("#photoLoading").hide();
