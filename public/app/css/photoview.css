@@ -1,0 +1,434 @@
+
+
+/* ==========================================================================
+   Remi B. CSS for Fb Event App
+   ========================================================================== */
+   
+   
+body {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	background-color: transparent !important;
+}
+
+
+.loading-div {
+	background-color: #ece7e0;
+	text-align: center;
+	height: 100%;
+	padding-top: 15%;
+	
+}
+
+.main-loading-title {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.sub-loading-title {
+	font-size: 16px;
+}
+
+/*******************************************
+Photo div
+*******************************************/
+
+.photo-container {
+	margin-right: 0px;
+	margin-left: 0px;
+
+}
+
+#img-full-div{
+	background-color: #242424 ;
+	height: 100%;
+	text-align: center;
+}
+
+#img-full-div img{
+	vertical-align: middle;
+}
+
+.photo-line-height {
+line-height: 200px;
+width: 100%;
+height: 100%;
+}
+
+.orientation-portrait img{
+	height: auto;
+	max-height: 100%;
+	max-width: 100%;
+}
+
+.orientation-paysage img{
+	width: auto;
+	max-height: 100%;
+	max-width: 100%;
+}
+
+.orientation-square img{
+	height: auto;
+	max-height: 100%;
+	max-width: 100%;
+}
+
+.col-img-full {
+	height : 100%; 
+	padding-right: 0px;
+	padding-left: 0px;
+}
+
+.col-comment-full{
+	height : 100%; 
+	padding-right: 0px;
+	padding-left: 0px;
+}
+
+/*******************************************
+comment div
+*******************************************/
+
+
+#comment-full-div{
+	background-color: #f8f8f8 ;
+	width: 100%;
+	height: 100%;
+	color: gray;
+}
+
+.owner-div img {
+	margin: 10px 10px;
+	border: 1px solid #616161;
+}
+
+.owner-div{
+	background-color: white;
+	border: 1px solid #c6c6c6;
+}
+.owner-div-description {
+	display: inline-block;
+	position: absolute;
+	margin-top: 15px;
+}
+
+.owner-div-userName {
+	font-weight: bold;
+	font-size: 18px;
+	color: #fd9210;
+}
+
+.like-div {
+	background-color: white;
+	border: 1px solid #c6c6c6;
+	padding: 10px 5px 5px 5px;
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+.comment-div {
+	overflow-y: scroll;
+	padding: 9px;
+	min-height: 250px;
+	padding-bottom: 50px;
+}
+
+.post-div{
+	background-color: white;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	height: 55px;
+	border: 1px solid #c6c6c6;
+}
+
+.like-button-picto {
+	font-size: 21px;
+	text-decoration: none;
+}
+.like-button-link {
+	text-decoration: none;
+	padding-top: 8px;
+	text-align: center;
+	background-color: #f8f8f8;
+	height: 40px;
+	width: 50px;
+	margin: 8px;
+	border: 1px solid #d6d6d6;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	display: inline-block;
+}
+
+.input-container {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	margin: 8px 20px 0px 66px;
+}
+
+.post-div-input {
+	width: 100%;
+	padding: 10px 9px 9px;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	border: 1px solid #ccc;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+	-webkit-appearance: none;
+	
+}
+
+.comment-content {
+	padding: 10px 0px 20px;
+	position: relative;
+	
+}
+
+.userCommentProfilPic {
+
+	position: absolute;
+
+}
+.userCommentProfilPic img{
+	width: 45px;
+	
+}
+
+.comment-text{
+	margin-left: 60px;
+}
+
+.commentUserName {
+	font-weight: bold;
+	color: #fd9210;
+}
+
+.comment-loading-div {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 100;
+	text-align: center;
+	padding-top: 65%;
+}
+
+.comment-loading-title {
+	color : white;
+	font-size: 20px;
+	
+}
+
+/* pour xs & sm */
+@media (max-width: 991px) {
+
+	.photo-line-height {
+		line-height: inherit !important;
+		margin: 0px;
+	}
+
+	.col-img-full {
+		height: auto;	
+	}
+	
+	.col-comment-full{
+		height: auto;
+		
+		/*padding: 0px 15px; */
+		
+	}
+	
+	.post-div {
+		/*margin-left: 15px;*/
+	}
+	
+	.orientation-portrait img{
+		height: auto;
+		max-width: 100%;
+	}
+	
+	.orientation-paysage img{
+		width: auto;
+		max-height: 100%;
+	}
+	
+	
+	body {
+		/*height: auto !important;*/
+		height: 100%;
+	}
+	
+	html {
+		height: 100%;
+	}
+	
+
+
+}
+
+/* pour xs & sm */
+@media (max-width: 640px) {
+	.comment-div {
+		overflow-y: auto;
+	}
+}
+
+/*******************************************
+loader
+*******************************************/
+
+.loader-img-center {
+	top: 0;
+	margin-top: 2px;
+	margin-left: 2px;
+
+}
+
+ @keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-moz-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-webkit-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-o-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-moz-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-webkit-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @-o-keyframes rotate-loading {
+            0%  {transform: rotate(0deg);-ms-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -moz-transform: rotate(0deg);}
+            100% {transform: rotate(360deg);-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -moz-transform: rotate(360deg);}
+        }
+
+        @keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        @-moz-keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        @-webkit-keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        @-o-keyframes loading-text-opacity {
+            0%  {opacity: 0}
+            20% {opacity: 0}
+            50% {opacity: 1}
+            100%{opacity: 0}
+        }
+
+        .loading {
+            position: relative;
+            border-radius: 100%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: -246px;
+			height: 204px;
+			width: 204px;
+			margin-bottom: 35px;
+        }
+
+        .loading {
+            border:8px solid transparent;
+            border-color: transparent #fff transparent #FFF;
+            -moz-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -moz-transform-origin: 50% 50%;
+            -o-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -o-transform-origin: 50% 50%;
+            -webkit-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -webkit-transform-origin: 50% 50%;
+            animation: rotate-loading 1.5s linear 0s infinite normal;
+            transform-origin: 50% 50%;
+        }
+
+        .loading-container:hover .loading {
+            border-color: transparent #E45635 transparent #E45635;
+        }
+        .loading-container:hover .loading,
+        .loading-container .loading {
+            -webkit-transition: all 0.5s ease-in-out;
+            -moz-transition: all 0.5s ease-in-out;
+            -ms-transition: all 0.5s ease-in-out;
+            -o-transition: all 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
+        }
+
+        #loading-text {
+            -moz-animation: loading-text-opacity 2s linear 0s infinite normal;
+            -o-animation: loading-text-opacity 2s linear 0s infinite normal;
+            -webkit-animation: loading-text-opacity 2s linear 0s infinite normal;
+            animation: loading-text-opacity 2s linear 0s infinite normal;
+            font-size: 18px;
+            opacity: 0;
+            text-align: center;
+            max-width: 360px;
+			margin: auto;
+        }
+        
+        
+       .comment-loading {
+            position: relative;
+            border-radius: 100%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: -176px;
+			height: 132px;
+			width: 132px;
+			margin-bottom: 35px;
+	        border:4px solid transparent;
+            border-color: transparent #fff transparent #FFF;
+            -moz-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -moz-transform-origin: 50% 50%;
+            -o-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -o-transform-origin: 50% 50%;
+            -webkit-animation: rotate-loading 1.5s linear 0s infinite normal;
+            -webkit-transform-origin: 50% 50%;
+            animation: rotate-loading 1.5s linear 0s infinite normal;
+            transform-origin: 50% 50%;
+       }

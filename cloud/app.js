@@ -76,12 +76,91 @@ app.get('/cgu/:lg', function(req, res) {
 */
 
 
-//Page event
+//on a les pages photo sur /p/id
+app.get('/p/:idphoto', function(req, res) {
+	var idPhoto = req.params.idphoto;
+	console.log("Id photo"+idPhoto);
+	
+	var photoUrl = "https://moment.parseapp.com/p/" + idPhoto;
+	
+	var photoSrc = "";
+	
+	//Get the event with its id
+	var Photo = Parse.Object.extend("Photo");
+	var queryPhoto = new Parse.Query(Photo);
+	
+	queryPhoto.include("user");
+	
+	queryPhoto.get(idPhoto, {
+	  success: function(photo) {
+	  
+	  	var user = photo.get("user");
+	  	if (user.attributes.pictureURL !=null) {
+	  		var userProfilPicUrl = user.attributes.pictureURL;
+	  	} else {
+			var userProfilPicUrl = ""; 	
+	  	}
+	  	
+	  	if (user.attributes.name !=null) {
+	  		var userName = user.attributes.name;
+	  	} else {
+			var userName = ""; 	
+	  	}
+	  	
+	  	
+	  	
+	  
+	  	//We find the picture
+	    if(photo.get("facebookId")!=null){
+	    	 photoSrc = photo.get("facebook_url_full");
+	    }else if (photo.get("full_image")!=null){
+	   
+	    	 photoSrc = photo.get("full_image").url();
+	    } else {
+	    	 res.send("Cannot get the photo");
+		}
+		
+		if (photo.get("event")!=null) {
+			var idEvent = photo.get("event") ;
+			var eventUrl = "https://moment.parseapp.com/e/" + photo.get("event");
+		}else {
+			var idEvent = "" ;
+		}
+		
+		if (photo.get("height")!=null) {
+			var photoHeight = photo.get("height") ;
+		}else {
+			var photoHeight = "" ;
+		}
+		
+		if (photo.get("width")!=null) {
+			var photoWidth = photo.get("width") ;
+		}else {
+			var photoWidth = "" ;
+		}
+		
+		if (photo.get("created_time")!=null) {
+			var createdTime = photo.get("created_time") ;
+		}else {
+			var createdTime = "" ;
+		}
+		
+		res.render('photoview', { photoUrl : photoUrl, photoSrc : photoSrc, eventId : idEvent, eventUrl : eventUrl , photoWidth : photoWidth, photoHeight : photoHeight, userName : userName, userProfilPicUrl : userProfilPicUrl, idPhoto : idPhoto, createdTime : createdTime });
+		
+	  },
+	  error: function() {
+		 res.send("Cannot get the photo");
+		 }
+	});
+   
+ });
+
+//on a les pages event au /f/id
 app.get('/e/:idevent', function(req, res) {
 	var idEvent = req.params.idevent;
 	console.log("Id event"+idEvent);
 	
-	var eventUrl = "https://www.woovent.com/e/" + idEvent;
+	var eventUrl = "https://moment.parseapp.com/e/" + idEvent;
 	
 	var photoUrl = "";
 	
@@ -134,10 +213,10 @@ app.get('/e/:idevent', function(req, res) {
 	  },
 	  error: function() {
 		    //console.log("Error: "+ error.message);
-		    res.redirect('/404/');
+		    res.send("Cannot get the event");
 		 }
 	});
-
-});
+   
+ });
 // Attach the Express app to Cloud Code.
 app.listen();
