@@ -468,6 +468,12 @@ Parse.Cloud.beforeSave("Event", function(request, response) {
 
 });
 
+Parse.Cloud.beforeSave(Parse.User, function(request, response) {
+	if (!request.object.get("location")) {
+		request.object.set("location", "rien");
+	};
+  response.success();  
+});
 
 
 //Welcome mail for new user
