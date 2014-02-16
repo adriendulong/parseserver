@@ -274,84 +274,100 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 // SEND Notificitaions concerning invitations
 
 Parse.Cloud.job("pushInvitation", function(request, status) {
+	console.log(request.params.startUser);
+
 	var today = new Date();
 	var pushToBeSent = 0;
+	var userIncrement = 0;
 
 	//only on sunday
 	if(today.getDay() == 0){
 		var query = new Parse.Query(Parse.User);
 	  query.each(function(user) {
+	  	if((userIncrement>=request.params.startUser)&&(userIncrement<(request.params.startUser+159))){
+	  		//Get invitations
+	  		console.log("pass, user increment : "+ userIncrement);
 
-	  	//Get invitations
-	  	var Invitation = Parse.Object.extend("Invitation");
-	  	var queryInvitations = new Parse.Query(Invitation)
-	  	queryInvitations.greaterThan("start_time", new Date());
-	  	queryInvitations.equalTo("rsvp_status", "not_replied");
-	  	queryInvitations.equalTo("user", user);
+		  	var Invitation = Parse.Object.extend("Invitation");
+		  	var queryInvitations = new Parse.Query(Invitation)
+		  	queryInvitations.greaterThan("start_time", new Date());
+		  	queryInvitations.equalTo("rsvp_status", "not_replied");
+		  	queryInvitations.equalTo("user", user);
 
 
-	  	//promise
-	  	var promise = new Parse.Promise();
+		  	//promise
+		  	var promise = new Parse.Promise();
 
-	  	queryInvitations.count({
-		  success: function(count) {
-		  	console.log("Nb user invitations : "+count);
-		    // The count request succeeded. Show the count
+		  	queryInvitations.count({
+			  success: function(count) {
+			  	console.log("Nb user invitations : "+count);
+			    // The count request succeeded. Show the count
 
-		    //If more than one invitation, send push
-		    if(count >0){
-		    	pushToBeSent++;
-		    	var query = new Parse.Query(Parse.Installation);
-				query.equalTo('owner', user);
-				query.equalTo("is_push_notif", true);
-				query.notEqualTo("appVersion", "1.0");
-				//query.notEqualTo("appVersion", "1.0");
+			    //If more than one invitation, send push
+			    if(count >0){
+			    	pushToBeSent++;
+			    	var query = new Parse.Query(Parse.Installation);
+					query.equalTo('owner', user);
+					query.equalTo("is_push_notif", true);
+					query.notEqualTo("appVersion", "1.0");
+					//query.notEqualTo("appVersion", "1.0");
 
-				var message;
-				if (count>1) {
-					message = "PushNotifs_InvitationsMany"
-				}
-				else{
-					message = "PushNotifs_InvitationsOne";
-				}
-
-				
-				Parse.Push.send({
-					where: query, // Set our Installation query
-					data: {
-					    alert: {
-					    	"loc-key" : message,
-					    	"loc-args" : [count]
-					    },
-					    badge: "Increment",
-					    type: 0
+					var message;
+					if (count>1) {
+						message = "PushNotifs_InvitationsMany"
 					}
-				}, 
-				{
-					success: function() {
-					    // Push was successful
-					    promise.resolve('Push Sent');
-					},
-					error: function(error) {
-					    console.log("Error :"+error.message);
-					    promise.reject(error); 
+					else{
+						message = "PushNotifs_InvitationsOne";
 					}
-				});
 
-				//promise.resolve('Push Sent');
-		    }
-		    else{
-		    	promise.resolve('No invitation');
-		    }
+					
+					Parse.Push.send({
+						where: query, // Set our Installation query
+						data: {
+						    alert: {
+						    	"loc-key" : message,
+						    	"loc-args" : [count]
+						    },
+						    badge: "Increment",
+						    type: 0
+						}
+					}, 
+					{
+						success: function() {
+						    // Push was successful
+						    userIncrement++;
+						    promise.resolve('Push Sent');
+						},
+						error: function(error) {
+							userIncrement++;
+						    console.log("Error :"+error.message);
+						    promise.reject(error); 
+						}
+					});
+					//userIncrement++;
+					//promise.resolve('Push Sent');
+			    }
+			    else{
+			    	userIncrement++;
+			    	promise.resolve('No invitation');
+			    }
 
-		  },
-		  error: function(error) {
-		    // The request failed
-		    promise.reject(error); 
-		  }
-		});
+			  },
+			  error: function(error) {
+			    // The request failed
+			    userIncrement++;
+			    promise.reject(error); 
+			  }
+			});
 
-		return promise;
+			return promise;
+	  	}
+	  	else{
+	  		console.log("no pass, user increment : "+ userIncrement);
+	  		userIncrement++;
+	  	}
+
+	  	
 
 	  }).then(function(){
 	    status.success('Done with '+pushToBeSent+" users to send");
@@ -380,13 +396,82 @@ Parse.Cloud.job("testpush", function(request, status) {
 		query.exists("has_rsvp_perm");
 
 		query.find().then(function(results) {
+			console.log(results.count);
+			var tests = ["ok", "deux"];
 		  // Create a trivial resolved promise as a base case.
 		  var promise = Parse.Promise.as();
-		  _.each(results, function(result) {
+		  results.forEach(function(user) {
+
+
+
 		    // For each item, extend the promise with a function to delete it.
 		    promise = promise.then(function() {
-		      // Return a promise that will be resolved when the delete is finished.
-		      return "toto";
+		    	console.log(pushToBeSent);
+		    	//Get invitations
+			  	var Invitation = Parse.Object.extend("Invitation");
+			  	var queryInvitations = new Parse.Query(Invitation)
+			  	queryInvitations.greaterThan("start_time", new Date());
+			  	queryInvitations.equalTo("rsvp_status", "not_replied");
+			  	queryInvitations.equalTo("user", user);
+
+
+			      queryInvitations.count({
+				  success: function(count) {
+				  	console.log("Nb user invitations : "+count);
+				    // The count request succeeded. Show the count
+
+				    //If more than one invitation, send push
+				    if(count >0){
+				    	pushToBeSent++;
+				    	var query = new Parse.Query(Parse.Installation);
+						query.equalTo('owner', user);
+						query.equalTo("is_push_notif", true);
+						query.notEqualTo("appVersion", "1.0");
+						//query.notEqualTo("appVersion", "1.0");
+
+						var message;
+						if (count>1) {
+							message = "PushNotifs_InvitationsMany"
+						}
+						else{
+							message = "PushNotifs_InvitationsOne";
+						}
+
+						
+						Parse.Push.send({
+							where: query, // Set our Installation query
+							data: {
+							    alert: {
+							    	"loc-key" : message,
+							    	"loc-args" : [count]
+							    },
+							    badge: "Increment",
+							    type: 0
+							}
+						}, 
+						{
+							success: function() {
+							    // Push was successful
+							    promise.resolve('Push Sent');
+							},
+							error: function(error) {
+							    console.log("Error :"+error.message);
+							    promise.reject(error); 
+							}
+						});
+
+						//promise.resolve('Push Sent');
+				    }
+				    else{
+				    	promise.resolve('No invitation');
+				    }
+
+				  },
+				  error: function(error) {
+				    // The request failed
+				    promise.reject(error); 
+				  }
+				});
 		    });
 		  });
 		  return promise;
