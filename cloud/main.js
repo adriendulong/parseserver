@@ -323,7 +323,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 					message = "PushNotifs_InvitationsOne";
 				}
 
-				/*
+				
 				Parse.Push.send({
 					where: query, // Set our Installation query
 					data: {
@@ -346,10 +346,10 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 					    console.log("Error :"+error.message);
 					    promise.reject(error); 
 					}
-				});*/
+				});
 				//userIncrement++;
 
-				promise.resolve('Push Sent');
+				//promise.resolve('Push Sent');
 		    }
 		    else{
 		    	promise.resolve('No invitation');
