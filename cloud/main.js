@@ -280,6 +280,9 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	var pushToBeSent = 0;
 	var userIncrement = 0;
 
+	//Start Date
+	var startDate = new Date();
+
 	//only on sunday
 	if(today.getDay() == 0){
 		var query = new Parse.Query(Parse.User);
@@ -298,13 +301,13 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	  	//promise
 	  	var promise = new Parse.Promise();
 
-	  	queryInvitations.count({
-		  success: function(count) {
-		  	console.log("Nb user invitations : "+count);
+	  	queryInvitations.find({
+		  success: function(invits) {
+		  	console.log("Nb user invitations : "+invits.length);
 		    // The count request succeeded. Show the count
 
 		    //If more than one invitation, send push
-		    if(count >0){
+		    if(invits.length >0){
 		    	pushToBeSent++;
 		    	var query = new Parse.Query(Parse.Installation);
 				query.equalTo('owner', user);
@@ -313,20 +316,20 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 				//query.notEqualTo("appVersion", "1.0");
 
 				var message;
-				if (count>1) {
+				if (invits.length>1) {
 					message = "PushNotifs_InvitationsMany"
 				}
 				else{
 					message = "PushNotifs_InvitationsOne";
 				}
 
-					/*
+				/*
 				Parse.Push.send({
 					where: query, // Set our Installation query
 					data: {
 					    alert: {
 					    	"loc-key" : message,
-					    	"loc-args" : [count]
+					    	"loc-args" : [invits.length]
 					    },
 					    badge: "Increment",
 					    type: 0
@@ -345,20 +348,8 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 					}
 				});*/
 				//userIncrement++;
-				user.set("pushWeekly", new Date());
-				user.save(null, {
-				  success: function(user) {
-				    // Execute any logic that should take place after the object is saved.
-				    promise.resolve('Push Sent');
-				  },
-				  error: function(user, error) {
-				    // Execute any logic that should take place if the save fails.
-				    // error is a Parse.Error with an error code and description.
-				    promise.reject(error); 
-				  }
-				});
 
-				//promise.resolve('Push Sent');
+				promise.resolve('Push Sent');
 		    }
 		    else{
 		    	promise.resolve('No invitation');
@@ -377,7 +368,9 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	  	
 
 	  }).then(function(){
-	    status.success('Done with '+pushToBeSent+" users to send");
+	  	var endDate = new Date();
+	  	var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+	    status.success('Done with '+pushToBeSent+" users to send and time : "+timeDiff);
 	  }, function (error) {
 	    status.error(error.message);
 	  });
