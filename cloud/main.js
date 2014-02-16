@@ -368,6 +368,48 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 });
 
 
+
+////TEST
+Parse.Cloud.job("testpush", function(request, status) {
+	var today = new Date();
+	var pushToBeSent = 0;
+
+	//only on sunday
+	if(today.getDay() == 0){
+		var query = new Parse.Query(Parse.User);
+		query.exists("has_rsvp_perm");
+
+		query.find().then(function(results) {
+		  // Create a trivial resolved promise as a base case.
+		  var promise = Parse.Promise.as();
+		  _.each(results, function(result) {
+		    // For each item, extend the promise with a function to delete it.
+		    promise = promise.then(function() {
+		      // Return a promise that will be resolved when the delete is finished.
+		      return "toto";
+		    });
+		  });
+		  return promise;
+		 
+		}).then(function() {
+		  // Every comment was deleted.
+		  status.success('Everything has been doneeee');
+		});
+
+
+	  
+	}
+	else{
+		status.success('No need to be done');
+	}
+
+  
+
+});
+
+
+
+
 //Remove invitation prospect when create invitation for the same event for a user
 Parse.Cloud.afterSave("Invitation", function(request) {
 
