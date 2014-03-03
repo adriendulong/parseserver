@@ -284,12 +284,11 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	var startDate = new Date();
 
 	//only on sunday
-	if(today.getDay() == 0){
+	if(today.getDay() == 1){
 		var query = new Parse.Query(Parse.User);
 		query.exists("has_rsvp_perm");
 	  query.each(function(user) {
 	  	//Get invitations
-	  	console.log("pass, user increment : "+ userIncrement);
 
 	  	var Invitation = Parse.Object.extend("Invitation");
 	  	var queryInvitations = new Parse.Query(Invitation)
@@ -303,7 +302,6 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 
 	  	queryInvitations.find({
 		  success: function(invits) {
-		  	console.log("Nb user invitations : "+invits.length);
 		    // The count request succeeded. Show the count
 
 		    //If more than one invitation, send push
