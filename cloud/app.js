@@ -62,18 +62,19 @@ app.get('/process-contact.php', function(req, res) {
 res.redirect('http://www.woovent.com/process-contact.php');
 });
 
-/*
-app.get('/cgu/:lg', function(req, res) {
-	console.log("Lang : "+req.params.lg);
-	if (req.params.lg == "fr") {
-		res.render("cgu");
-	}
-	else{
-		res.render("cgu_en");
-	}
+
+app.get('/press', function(req, res) {
+
+		res.redirect("http://www.woovent.com/press.html");
 	
 });
-*/
+
+app.get('/presse', function(req, res) {
+
+		res.redirect("http://www.woovent.com/press.html");
+	
+});
+
 
 
 //on a les pages photo sur /p/id
