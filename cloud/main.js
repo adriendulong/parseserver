@@ -385,6 +385,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 
 
 //Remove invitation prospect when create invitation for the same event for a user
+/*
 Parse.Cloud.afterSave("Invitation", function(request) {
 
 	//It is an invitation for a user
@@ -451,14 +452,16 @@ Parse.Cloud.afterSave("Invitation", function(request) {
 	};
 
 });
-
+*/
 
 //Don't duplicate events
 
 Parse.Cloud.beforeSave("Event", function(request, response) {
 
+
+
 	//The app is trying to create the event
-	if (!request.object.id) {
+	if (!request.object.existed()) {
 		var Event = Parse.Object.extend("Event");
 		var query = new Parse.Query(Event);
 		query.equalTo("eventId", request.object.get("eventId"))
@@ -483,6 +486,39 @@ Parse.Cloud.beforeSave("Event", function(request, response) {
 	
 
 });
+
+
+//Don't duplicate events
+
+Parse.Cloud.beforeSave("Invitation", function(request, response) {
+
+	//The app is trying to create the invitation
+	if (!request.object.existed()) {
+		var invit = Parse.Object.extend("Invitation");
+		var query = new Parse.Query(invit);
+		query.equalTo("user", request.user);
+		query.equalTo("event", request.object.get("event"));
+
+		query.first({
+	      success: function(object) {
+	        if (object) {
+	          response.error("An invitation for this user and this event already  exists.");
+	        } else {
+	          response.success();
+	        }
+	      },
+	      error: function(error) {
+	        response.error("Could not validate uniqueness for this invitation object.");
+	      }
+	    });
+	}
+	else{
+		response.success();
+	}
+	
+
+});
+
 
 Parse.Cloud.beforeSave(Parse.User, function(request, response) {
 	if (!request.object.get("location")) {
