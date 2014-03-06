@@ -75,6 +75,12 @@ app.get('/presse', function(req, res) {
 	
 });
 
+app.get('/press/en', function(req, res) {
+
+		res.redirect("http://www.woovent.com/press_en.html");
+	
+});
+
 
 
 //on a les pages photo sur /p/id
