@@ -420,6 +420,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 	var today = new Date();
 
 	var eventObject = Parse.Object.extend("Event");
+	query.doesNotExist("nb_photos");
 	var query = new Parse.Query(eventObject);
 
 	query.each(function(eventResult) {
