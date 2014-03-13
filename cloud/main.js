@@ -382,6 +382,94 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 });
 
 
+Parse.Cloud.job("getNbLikesPhotos", function(request, status) {
+	var nbPhotosDone = 0;
+
+	var photo = Parse.Object.extend("Photo");
+	var query = new Parse.Query(photo);
+	query.exists("likes");
+
+
+
+	query.each(function(photo) {
+		var promise = new Parse.Promise();
+
+		photo.set("nb_likes", photo.get("likes").length);
+		photo.save(null, {
+		  success: function(photo) {
+		    nbPhotosDone++;
+		    promise.resolve('Likes added');
+		  },
+		  error: function(photo, error) {
+		  	nbPhotosDone++;
+		    promise.reject(error); 
+		  }
+		});
+
+		return promise;
+	}).then(function(){
+	    status.success('All Photos Done : '+nbPhotosDone);
+	}, function (error) {
+	    status.error(error.message);
+	});
+});
+
+
+Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
+	var nbEvents = 0;
+	var today = new Date();
+
+	var eventObject = Parse.Object.extend("Event");
+	var query = new Parse.Query(eventObject);
+
+	query.each(function(eventResult) {
+
+		var promise = new Parse.Promise();
+
+		var photoObject = Parse.Object.extend("Photo");
+		var queryPhoto = new Parse.Query(photoObject);
+		queryPhoto.equalTo('event', eventResult);
+
+
+		queryPhoto.find({
+		  success: function(photos) {
+		  	nbEvents++;
+		  	console.log("photos nob : "+ photos.length);
+
+		  	if(photos.length>0){
+		  		eventResult.set("nb_photos", photos.length);
+		  		eventResult.save(null, {
+		  			success: function(event){
+		  				console.log("nb photos set");
+						promise.resolve('Nb Photos set');
+		  			},
+		  			error: function(event, error){
+		  				promise.reject(error); 
+		  			}
+		  		});
+
+		  	}
+		  	else{
+		  		promise.resolve('No Photos');
+		  	}
+
+		    
+		  },
+		  error: function(photo, error) {
+		    promise.reject(error);  
+		  }
+		});
+
+		return promise;
+	}).then(function(){
+		var endDate = new Date();
+	  	var timeDiff = Math.abs(today.getTime() - endDate.getTime());
+	    status.success('All Events Done : '+nbEvents+" in time : "+timeDiff);
+	}, function (error) {
+	    status.error(error.message);
+	});
+});
+
 
 
 //Remove invitation prospect when create invitation for the same event for a user
@@ -528,69 +616,141 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
 });
 
 
-//Welcome mail for new user
-/*
-Parse.Cloud.afterSave(Parse.User, function(request) {
-	console.log(request.object.get("email"));
+//////////////
+//// UPDATE Nb Photos, Nb Likes, Nb Comments for the event of the Photo
+//////////////
 
-	var Mandrill = require('mandrill');
-	Mandrill.initialize('eW9iPysJRI-LBinyq_D_Hg');
+Parse.Cloud.beforeSave("Photo", function(request, response) {
 
-	Mandrill.sendEmail({
-		"from_email": "hello@appmoment.fr",
-        "from_name": "Adrien",
-	    "template_name": "welcome-mail-woovent-fr",
-	    "template_content": [
-	        {
-	            "name": "fname",
-	            "content": request.object.get("first_name")
-	        }
-	    ],
-	    "message":{
-	    	"to":[
-	    		{
-	    			"email": "adrien@woovent.fr",
-	    			"name": request.object.get("first_name")
-	    		}
-	    	]
-	    },
-		  async: true
-		},{
-		  success: function(httpResponse) {
-		    console.log(httpResponse);
-		  },
-		  error: function(httpResponse) {
-		    console.error(httpResponse);
+	//Photo does not exists
+	if (!request.object.existed()) {
+
+		//Get the event
+		var query = new Parse.Query("Event");
+		query.equalTo("objectId", request.object.get("event").id);
+
+		query.find().then(function(events) {
+		  events[0].increment("nb_photos");
+		  if (request.object.get("comments")) {
+		  	events[0].increment("nb_comments");
 		  }
+		  return events[0].save();
+		 
+		}).then(function(event) {
+			request.user.set("last_upload", new Date());
+			return request.user.save();
+		}).then(function(event) {
+		 	response.success();
+		},function(error){
+			response.success();
 		});
+	
+	}
 
+	///
+	// Photo exists (take a look at the comments or likes)
+	///
 
-	//The app is trying to create the event
-	if (!request.object.id) {
-		var Event = Parse.Object.extend("Event");
-		var query = new Parse.Query(Event);
-		query.equalTo("eventId", request.object.get("eventId"))
+	else{
+		//One more comments (no way to remove one for the moment)
+		if (request.object.dirty("comments")) {
+			console.log("COMMENTS HAVE CHANGED");
 
-		query.count({
-			success: function(count) {
-				if(count>0){
-					response.error("The event already exists");
+			//Increment number of comments
+			var query = new Parse.Query("Event");
+			query.equalTo("objectId", request.object.get("event").id);
+
+			query.find().then(function(events) {
+			  events[0].increment("nb_comments");
+			  return events[0].save();
+			 
+			}).then(function(event) {
+			  response.success();
+			 
+			},function(error){
+				response.success();
+			});
+		}
+
+		//Nb like changed, one more or one less ?
+		else if(request.object.dirty("likes")){
+			console.log("LIKES HAVE CHANGED");
+
+			var increment = true;
+
+			var queryPhoto = new Parse.Query("Photo");
+			queryPhoto.equalTo("objectId", request.object.id);
+			queryPhoto.find().then(function(photos){
+				var photo = photos[0];
+
+				//First like
+				if (!photo.get("likes")) {
+					increment = true;
+				}
+				//One like have been removed
+				else if (photo.get("likes").length>request.object.get("likes").length) {
+					increment = false;
+				}
+
+				var query = new Parse.Query("Event");
+				query.equalTo("objectId", request.object.get("event").id);
+				return query.find();
+				
+			}).then(function(events){
+				if (increment) {
+					request.object.increment("nb_likes");
+					console.log("INCREMENT LIKE");
+					events[0].increment("nb_likes");
 				}
 				else{
-					response.success();
+					request.object.increment("nb_likes", -1);
+					console.log("DECREMENT LIKE");
+					events[0].increment("nb_likes", -1);
 				}
-			},
-			error: function(results){
-				response.error("Can't get the count");
-			}
-		});
-	}
-	else{
-		response.success();
-	}
-	
+				
+				return events[0].save();
+			 
+			}).then(function(event) {
+			  response.success();
+			 
+			}, function(error){
+				console.log("ERROR : "+error.message);
+				response.success();
+			});
+		}
+		else{
+			response.success();
+		}
 
-});*/
+		
+	}
+});
+
+///
+// Remove one to the photos count of the event when we remove one photos
+///
+
+Parse.Cloud.afterDelete("Photo", function(request) {
+   console.log("Nombre de comments en moins : "+request.object.get("comments").length);
+
+   var query = new Parse.Query("Event");
+	query.equalTo("objectId", request.object.get("event").id);
+
+	query.find().then(function(events) {
+			events[0].increment("nb_comments", -(request.object.get("comments").length));
+			events[0].increment("nb_likes", -(request.object.get("likes").length));
+			events[0].increment("nb_photos", -1);
+			return events[0].save();
+			 
+		}).then(function(event) {
+			console.log("succes");
+			 
+		},function(error){
+			console.error("Problem modifying nb when delete photo : "+error.message);
+		});
+
+});
+
 
 
 
