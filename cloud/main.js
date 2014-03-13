@@ -466,7 +466,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 	  	var timeDiff = Math.abs(today.getTime() - endDate.getTime());
 	    status.success('All Events Done : '+nbEvents+" in time : "+timeDiff);
 	}, function (error) {
-	    status.error(error.message);
+	    status.error(error);
 	});
 });
 
