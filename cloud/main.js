@@ -436,7 +436,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 		  	nbEvents++;
 		  	console.log("photos nob : "+ photos.length);
 
-		  	if(photos.length>0){
+		  	//if(photos.length>0){
 		  		eventResult.set("nb_photos", photos.length);
 		  		eventResult.save(null, {
 		  			success: function(event){
@@ -448,10 +448,10 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 		  			}
 		  		});
 
-		  	}
-		  	else{
-		  		promise.resolve('No Photos');
-		  	}
+		  	//}
+		  	//else{
+		  	//	promise.resolve('No Photos');
+		  	//}
 
 		    
 		  },
@@ -466,7 +466,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 	  	var timeDiff = Math.abs(today.getTime() - endDate.getTime());
 	    status.success('All Events Done : '+nbEvents+" in time : "+timeDiff);
 	}, function (error) {
-	    status.error(error);
+	    status.error(error.getCode());
 	});
 });
 
