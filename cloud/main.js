@@ -567,6 +567,7 @@ Parse.Cloud.beforeSave("Event", function(request, response) {
 					response.error("The event already exists");
 				}
 				else{
+					request.object.set("nb_photos", 0);
 					response.success();
 				}
 			},
