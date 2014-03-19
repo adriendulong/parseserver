@@ -420,46 +420,52 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 	var today = new Date();
 
 	var eventObject = Parse.Object.extend("Event");
-	query.doesNotExist("nb_photos");
 	var query = new Parse.Query(eventObject);
+	query.doesNotExist("nb_photos");
 
 	query.each(function(eventResult) {
-
+		var endDate = new Date();
+	  	var timeDiff = Math.abs(today.getTime() - endDate.getTime());
+		
 		var promise = new Parse.Promise();
 
-		var photoObject = Parse.Object.extend("Photo");
-		var queryPhoto = new Parse.Query(photoObject);
-		queryPhoto.equalTo('event', eventResult);
+		if (timeDiff<750000) {
+			var photoObject = Parse.Object.extend("Photo");
+			var queryPhoto = new Parse.Query(photoObject);
+			queryPhoto.equalTo('event', eventResult);
 
 
-		queryPhoto.find({
-		  success: function(photos) {
-		  	nbEvents++;
-		  	console.log("photos nob : "+ photos.length);
+			queryPhoto.find({
+			  success: function(photos) {
+			  	nbEvents++;
 
-		  	//if(photos.length>0){
-		  		eventResult.set("nb_photos", photos.length);
-		  		eventResult.save(null, {
-		  			success: function(event){
-		  				console.log("nb photos set");
-						promise.resolve('Nb Photos set');
-		  			},
-		  			error: function(event, error){
-		  				promise.reject(error); 
-		  			}
-		  		});
+			  	//if(photos.length>0){
+			  		eventResult.set("nb_photos", photos.length);
+			  		eventResult.save(null, {
+			  			success: function(event){
+			  				console.log("nb photos set");
+							promise.resolve('Nb Photos set');
+			  			},
+			  			error: function(event, error){
+			  				promise.reject(error); 
+			  			}
+			  		});
 
-		  	//}
-		  	//else{
-		  	//	promise.resolve('No Photos');
-		  	//}
+			  	//}
+			  	//else{
+			  	//	promise.resolve('No Photos');
+			  	//}
 
-		    
-		  },
-		  error: function(photo, error) {
-		    promise.reject(error);  
-		  }
-		});
+			    
+			  },
+			  error: function(photo, error) {
+			    promise.reject(error);  
+			  }
+			});
+		}
+		else{
+			promise.resolve('Too late');
+		}
 
 		return promise;
 	}).then(function(){
@@ -467,7 +473,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 	  	var timeDiff = Math.abs(today.getTime() - endDate.getTime());
 	    status.success('All Events Done : '+nbEvents+" in time : "+timeDiff);
 	}, function (error) {
-	    status.error(error.getCode());
+	    status.error(error);
 	});
 });
 
