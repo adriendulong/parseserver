@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        
+        <!-- Site Infos -->
+		<title> Souvenirs </title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	    <meta name="description" content="Woovent, transformez vos évènements passés en de véritables souvenirs !" />
+	    <meta name="keywords" content="Woovent, wovent, wouvent, evenement, event, evenements, facebook, app, iphone, appstore" />
+	    <meta name="author" content="Woovent" />
+	    
+	    <!-- OG Facebook -->
+	    <meta property="og:type" content="website"> 
+		<meta property="fb:app_id" content="493616390746321" />
+		<meta property="og:site_name" content="Woovent"> 
+		<meta property="fb:admins" content="bardouxr"> 
+		<meta property="og:image" content="https://woovent.com/images/icon_woovent512.png"> 
+		<meta property="og:url" content="https://www.woovent.com"> 
+		<meta property="og:title" content="Woovent, Gérez vos évènements Facebook du bout des doigts !"> 
+		<meta property="og:description" content="Woovent, est la première application mobile qui repense la façon dont vous vivez vos évènements Facebook !">	
+		
+	    <meta name="twitter:site" content="@wooventapp">
+		<meta name="twitter:card" content="summary">
+	    <meta name="twitter:title" content="Woovent, Gérez vos évènements Facebook du bout des doigts !">
+	    <meta name="twitter:description" content="Woovent, est la première application mobile qui repense la façon dont vous vivez vos évènements Facebook !">
+	    <meta name="twitter:image" content="https://woovent.com/images/icon_woovent512.png">
+    
+        <!-- Mobile Specific Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+		<!-- CSS File -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/souvenirs.css">
+
+        <!--[if lt IE 9]>
+            <script src="js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
+        <![endif]-->
+        
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="//www.parsecdn.com/js/parse-1.2.12.min.js" ></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <!--<script src="js/main.js"></script>-->
+        <script src="js/souvenirs.js"></script>
+       
+        <!-- Source pour le calendrier --> 
+        <link rel="stylesheet" href="css/datepicker.css" />
+		<script src="js/bootstrap-datepicker.js"></script>
+
+        <script>
+		
+		Parse.initialize("5eiOkg1KxyOMYD1elwGQZIPsYQ19lD6NO4XoNgZc", "AsE7OIslyJA1vQ6Sq3xWGjVxDDRr86chPIO1wdlc");
+		
+		
+		  window.fbAsyncInit = function() {
+			  Parse.FacebookUtils.init({
+			    appId      : '493616390746321', // App ID
+			    channelUrl : '//remibardoux.com/channel.html', // Channel File
+				status     : true, // check login status
+				cookie     : true, // enable cookies to allow Parse to access the session
+				xfbml      : true  // parse XFBML
+	        });
+			// Additional init code here
+	        isUserStillConnected();  
+	      };
+	      
+	      (function(d, debug){
+	         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	         if (d.getElementById(id)) {return;}
+	         js = d.createElement('script'); js.id = id; js.async = true;
+	         js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+	         ref.parentNode.insertBefore(js, ref);
+	       }(document, /*debug*/ false));
+	       
+
+		
+		</script>
+        
+    </head>
+    
+        
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Début Body
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+    <body onload="setDivHeight()" onresize="setDivHeight()">
+    
+	    <div id="fb-root"></div>
+
+
+    
+    
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Header Nav Bar
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+ 
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Mon Event</a>
+        </div><!-- Fin  navbar header -->
+        <div class="navbar-collapse collapse">
+	      <ul class="nav navbar-nav navbar-right">
+	            <li> <button onclick="showStatistique()" class="btn btn-success btn-logged-in" style="margin-top : 10px; margin-right :20px; display : none;">Statistiques</button></li>
+	            <li> <button onclick="showStatistique()" class="btn btn-info btn-logged-in" style="margin-top : 10px; margin-right :20px; display : none;"><span class="badge pull-right" style="background-color : white; color : #5bc0de;">42</span>Mes Souvenirs &nbsp </button></li>
+	            <li> <button onclick="fblogin()" class="btn btn-primary btn-login" style="margin-top : 10px;">Login With Facebook</button></li>
+	            <li> <button onclick="" class="btn btn-default btn-logged-in" style="margin-top : 10px; display : none;">Logout</button></li>
+	            
+	      </ul>
+        </div><!--/.navbar-collapse -->
+      </div><!-- Fin container navbar-->
+    </div><!-- Fin navbar-->
+
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Container 
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+	<div class="container " style="">
+	
+	</br></br>
+		
+		<center>
+			<div class="download-button col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="">
+				<button class="btn btn-warning btn-lg"> Télécharger l'application iPhone </button>
+			</div>		
+		</center>
+		
+	</br></br>
+		
+		<div class="event-list">
+			<!-- div 1 event 
+			<div class="event-div">
+				<div class="row header-event">
+					<div class=" col-xs-6 col-sm-6 col-md-6 col-lg-6 " style="">
+						<p> Nom de l'event </p>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 " style="">
+						<p><span class="photo-number"> <span class="glyphicon glyphicon-camera" style=""></span> 15 Photos </span></p>
+					</div>
+				</div>
+				
+				<div class="row event-photo-div">
+					<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+						<div class="image-preview" style="">
+							<img src="https://scontent-b.xx.fbcdn.net/hphotos-ash3/1378106_10151730141083985_427231201_n.jpg" class="" style="">
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2">
+						<div class="image-preview" style="">
+							<img src="https://scontent-b.xx.fbcdn.net/hphotos-ash3/1378106_10151730141083985_427231201_n.jpg" class="" style="">
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 hidden-xs hidden-sm">
+						<div class="image-preview" style="">
+							<img src="https://scontent-b.xx.fbcdn.net/hphotos-ash3/1378106_10151730141083985_427231201_n.jpg" class="" style="">
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 hidden-xs hidden-sm">
+						<div class="image-preview" style="">
+							<img src="https://scontent-b.xx.fbcdn.net/hphotos-ash3/1378106_10151730141083985_427231201_n.jpg" class="" style="">
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 hidden-xs hidden-sm">
+						<div class="image-preview" style="">
+							<img src="https://scontent-b.xx.fbcdn.net/hphotos-ash3/1378106_10151730141083985_427231201_n.jpg" class="" style="">
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 hidden-xs hidden-sm">	
+						<center style="margin-top : 17px;">
+							<a href="#">
+								<p style="font-size : 20px;">
+									<span class="glyphicon glyphicon-zoom-in" style="font-size : 60px;"></span></br>
+									Voir toutes les photos !</p>
+							</a>
+						</center>
+					</div>
+				</div>
+				
+			</div>
+			
+			</br></br> -->
+			
+		</div>
+
+	</div> <!-- Fin Container  -->	
+	
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Container photo
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>
+	<div class="container " style="">
+
+		<div class="photoWall">
+			<div class="row photoWallContent"> 
+
+			
+			
+			</div>
+	
+		</div>
+
+	</div> <!-- Fin Container  -->	
+	
+
+	
+
+	<script> 
+	// Pour Google Analytics
+	    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+	    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	    g.src='//www.google-analytics.com/ga.js';
+	    s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+	
+        
+<!----------------------------------------------------------------------------
+------------------------------------------------------------------------------
+                        Modal choix de la durée
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------>        
+<!-- Modal -->
+<div class="modal fade modal-wide" id="selectTimeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"><center>Voilà vos tops évènements de 2013</center></h4>
+      </div>
+      <div class="modal-body ">
+
+		<!----------------------------------------------------------------------------
+		------------------------------------------------------------------------------
+		                       contenu des events avec durée à determiner
+		------------------------------------------------------------------------------
+		------------------------------------------------------------------------------>      
+      	<div class="selectTimeModalContent">
+	      	<center>
+	      	<p><i> Afin de récupérer de façon précise les bonnes photos, nous avons besoins de savoir la durée approximative des vos évènements</i></p>
+	      	</br>
+	      	</center>
+	        
+	        <div class=" eventListTab" >
+	
+	        </div>
+      	</div>
+      	
+		<!----------------------------------------------------------------------------
+		------------------------------------------------------------------------------
+		                       loading des photos
+		------------------------------------------------------------------------------
+		------------------------------------------------------------------------------>
+		
+		<div class=" loader" style="display : none; ">
+			<center>
+					
+				<img   src="img/loader.gif" style="margin-top : 4%">
+				<p style="margin-top : 30px; font-size : 20px;"> Récupération des photos en cours ! </p>
+						
+				<!-- analyse des liens d'amitiés -->
+				<p  style="margin-top : 30px; font-size : 16px;"><span class="userPhotoToFetch"> </span> / <span class="userPhotoFetched"> </span> amis invités ayant peut être  postées des photos </p>
+				<div class="progress progress-striped active ">
+					<div class="progress-bar progress-photoFetched"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+						 <p><span class="sr-only"><span class="userPhotoToFetch"> </span> / <span class="userPhotoFetched"> </span> amis invités ayant peut être  postées des photos </p></span>
+					</div>
+				</div>
+			</center>
+		</div>
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="recupPhotoButton" style="display : none;">Récupérer les photos de ces évènements</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->        
+        
+        <script>/*
+        $('#estimateEndDate').datepicker({
+			format: 'dd-mm-yyyy',
+			weekStart : '1'
+		});*/
+		
+		//quand on clic sur la recuperation des photos
+		$("#recupPhotoButton").click(function(){
+	
+		fetchPictureOfTheEvent();
+		
+		});
+        </script>
+        
+    </body>
+</html>

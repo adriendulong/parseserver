@@ -15,6 +15,28 @@ app.post('/', function(req, res) {
    res.redirect('/');
  });
  
+ app.get('/testimage', function(req, res) {
+	var Buffer = require('buffer').Buffer;
+	 var params = querystring.parse(url.parse(req.url).query);
+	var pictureNewUrl = params['url'];
+	console.log("url : " + pictureNewUrl);
+   Parse.Cloud.httpRequest({
+	  	url: pictureNewUrl ,
+	  success: function(httpResponse) {
+	    var imageBuffer = httpResponse.buffer;
+	    res.set('Content-Type', 'image/jpeg');
+	    res.send(imageBuffer);
+
+	    
+	  },
+	  error: function(httpResponse) {
+	    console.error('Request failed with response code ' + httpResponse.status);
+	  }
+	});
+   
+ });
+
+ 
  app.post('/e/:idevent', function(req, res) {
  	var idEvent = req.params.idevent;
  	var eventUrlRed = '/e/' + idEvent ;
