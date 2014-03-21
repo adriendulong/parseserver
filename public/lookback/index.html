@@ -12,7 +12,7 @@
         	<!-- Site Infos -->
 		<title> Facebook Event Lookback : Discover your parties’ best friends in one picture ! </title>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	    <meta name="description" content=" Facebook Event Lookback : Discover your parties’ best friends and your parties’ stats in one picture! Better than Tinder, Woovent help you to find your top 3 best parties bro' and sis'! You might be surprised! It’s free, you only have to click here :) Discover in a few clicks the number of invites your received, your parties’ best pals, the number of events you attended... " />
+	    <meta name="description" content=" Facebook Event Lookback : Discover your parties’ best friends and your parties’ stats in one picture! Better than Tinder, Woovent help you find your top 3 parties bros and sis! You might be surprised! And it’s free, you only have to click here :) Discover in a few clicks the number of invites your received, the number of events you attended... " />
 	    <meta name="keywords" content="Woovent, wovent, wouvent, evenement, event, evenements, facebook, app, iphone, appstore, events" />
 	    <meta name="author" content="Woovent" />
 	    
@@ -21,19 +21,23 @@
 		<meta property="fb:app_id" content="493616390746321" />
 		<meta property="og:site_name" content="Woovent"> 
 		<meta property="fb:admins" content="bardouxr"> 
-		<meta property="og:image" content="http://woovent.com/lookback/img/testOG.png"> 
-		<meta property="og:url" content="http://woovent.com/lookback/"> 
-		<meta property="og:title" content="Facebook Event Lookback : Discover your parties’ best friends in one picture!"> 
-		<meta property="og:description" content="Better than Tinder, Woovent help you to find your top 3 best parties bro' and sis'! You might be surprised! And it’s free, you only have to click here :)">	
+		<meta property="og:image" content="http://www.woovent.com/lookback/img/testOG.png"> 
+		<meta property="og:url" content="http://www.woovent.com/lookback/"> 
+		
+		<meta property="og:title" content="Facebook Events Lookback : Discover your parties’ best friends in one picture!"> 
+		<meta property="og:description" content="Better than Tinder, Woovent help you find your top 3 parties bros and sis! You might be surprised! And it’s free, you only have to click here :)">	
 		
 		<!-- Twitter OG -->
 	    <meta name="twitter:site" content="@wooventapp">
-		<meta name="twitter:card" content="app">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:image:src" content="http://www.woovent.com/lookback/img/testOG.png">
+		<meta name="twitter:domain" content="woovent.com">
+		<meta name="twitter:app:name:iphone" content="Woovent">
+		<meta name="twitter:app:name:ipad" content="Woovent">
 	    <meta name="twitter:title" content="Facebook Event Lookback : Discover your parties’ best friends and your parties’ stats in one picture!">
 	    <meta name="twitter:description" content="Better than Tinder, Woovent help you to find your top 3 best parties bro' and sis'! You might be surprised! And it’s free, you only have to click here :)">
-	    <meta name="twitter:app:id:iphone" content="781588768">
-	    <meta name=" twitter:app:id:ipad" content="781588768">
-	    <meta name="twitter:image" content="http://woovent.com/lookback/img/testOG.png">
+	    <meta name="twitter:app:id:iphone" content="id781588768">
+	    <meta name=" twitter:app:id:ipad" content="id781588768">
     
         <!-- Mobile Specific Meta -->
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -44,9 +48,9 @@
 		<meta name="apple-itunes-app" content="app-id=781588768, app-argument=foobar">
 		
 		<!-- Font -->
-		<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400,400italic,700,700italic,500,500italic,300,100' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Herr+Von+Muellerhoff' rel='stylesheet' type='text/css'>
+		<link href='//fonts.googleapis.com/css?family=Roboto:300italic,400,400italic,700,700italic,500,500italic,300,100' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Herr+Von+Muellerhoff' rel='stylesheet' type='text/css'>
 
 		<!-- CSS File -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -70,15 +74,15 @@
 		 var userLang = navigator.language || navigator.userLanguage; 
 		 console.log("The language is: " + userLang);
 		 if (userLang == "fr"){
-		 	document.write('<script src="/js/language/stats_french.js" type="text/javascript"><\/script>');
+		 	document.write('<script src="js/language/stats_french.js" type="text/javascript"><\/script>');
 		 }else if (userLang == "es") {
-			 document.write('<script src="/js/language/stats_french.js" type="text/javascript"><\/script>');
+			 document.write('<script src="js/language/stats_french.js" type="text/javascript"><\/script>');
 		 }else {
-			 document.write('<script src="/js/language/stats_english.js" type="text/javascript"><\/script>');
+			 document.write('<script src="js/language/stats_english.js" type="text/javascript"><\/script>');
 		 }
         </script>
         
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script type="text/javascript" src="//www.parsecdn.com/js/parse-1.2.12.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/main.js"></script>
@@ -96,7 +100,7 @@
 		  window.fbAsyncInit = function() {
 			  Parse.FacebookUtils.init({
 			    appId      : '493616390746321', // App ID
-			    channelUrl : '//woovent.com//channel.html', // Channel File
+			    channelUrl : '//www.woovent.com//channel.html', // Channel File
 				status     : true, // check login status
 				cookie     : true, // enable cookies to allow Parse to access the session
 				xfbml      : true  // parse XFBML
@@ -152,7 +156,7 @@
              <p style="margin-bottom : 0px;"> Menu </p>
              
           </button>
-          <a class="navbar-brand" href="//www.woovent.com/" style="padding: 10px;"><img src="/img/logo.png" alt="Woovent, the best app for your Facebook events !" height="30px" style="" /> </a>
+          <a class="navbar-brand" href="//www.woovent.com/" style="padding: 10px;"><img src="img/logo.png" alt="Woovent, the best app for your Facebook events !" height="30px" style="" /> </a>
         </div><!-- Fin  navbar header -->
         <div class="navbar-collapse collapse navbar-right header_nav_link" >
         	 <ul class="nav navbar-nav visible-xs">
@@ -182,11 +186,11 @@
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------>  
 	<div class="container connection-div" style="margin-top : 150px;height: 100%;">
-		<img class="woovent_logo" src="/img/mw.png" alt="Woovent App Logo for iPhone" width="105px" style="margin-top : 10px;margin-bottom : 30px;" />
+		<img class="woovent_logo" src="img/mw.png" alt="Woovent App Logo for iPhone" width="105px" style="margin-top : 10px;margin-bottom : 30px;" />
 		<p class="main-loading-title-big " style="">FACEBOOK EVENTS LOOKBACK <br /></p>
 		<p class="main-loading-title " style=""><script>document.write(wording_connexion_waitin_text);</script> </p>
 		<a onclick="fblogin()" style="display : none;" class="btn-login-big" href="#"  >
-			<img class="woovent_login_facebook" src="/img/fblogin.png" alt="Facebook login easy with Woovent" width="250px" style="" /> 
+			<img class="woovent_login_facebook" src="img/fblogin.png" alt="Facebook login easy with Woovent" width="250px" style="" /> 
 		</a>
 	
 	</div>  
@@ -201,7 +205,7 @@
 		<div class="loading-div loader " style="display : none; ">
 	
 			<div class="loader-woovent-circle">
-				<img class="loader-img-center" src="/img/loading-woovent.png" alt="Facebook events picture" height="188" style="margin-bottom : 50px;" />
+				<img class="loader-img-center" src="img/loading-woovent.png" alt="Facebook events picture" height="188" style="margin-bottom : 50px;" />
 				
 				<div class="loading"></div>
 			</div>
@@ -542,7 +546,7 @@
 			<div class="maleHiddingRow topMale_ShareToSee" style="display : none;">
 				<div class="row">
 					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hidden-xs">
-						<img src="./img/icon_coupe_cache.png" class="img-responsive" >
+						<img src="img/icon_coupe_cache.png" class="img-responsive" >
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 " style="color : white;">
 						<br /><br />
@@ -687,7 +691,7 @@
 			<div class="topFemale_ShareToSee femaleHiddingRow" style="display : none;">
 				<div class="row">
 					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hidden-xs">
-						<img src="./img/icon_coupe_cache.png" class="img-responsive" >
+						<img src="img/icon_coupe_cache.png" class="img-responsive" >
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 ">
 						<br /><br />
@@ -750,9 +754,9 @@
 	
 		<!-- AddThis Button BEGIN -->
 		<div class="addthis_toolbox addthis_floating_style addthis_counter_style hidden-xs hidden-sm" style="right: 5px;top: 100px;padding-left: 0px;">
-		<div class="fb-like" data-href="http://www.facebook.com/woovent" data-width="450" data-layout="box_count" data-show-faces="false" data-send="false"></div>
+		<div class="fb-like" data-href="//www.facebook.com/woovent" data-width="450" data-layout="box_count" data-show-faces="false" data-send="false"></div>
 		
-		<a href="http://www.woovent.com" class="twitter-share-button" data-url="www.woovent.com" data-counturl="http://www.woovent.com" data-lang="en" data-count="vertical">Tweet</a>
+		<a href="//www.woovent.com" class="twitter-share-button" data-url="www.woovent.com" data-counturl="http://www.woovent.com" data-lang="en" data-count="vertical">Tweet</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>	
 		<div class="g-plusone" data-size="tall" data-href="http://www.woovent.com"></div>
 		<a class="addthis_counter"></a>
@@ -784,7 +788,7 @@
 					<br /><br />
 					
 					<a href="https://www.itunes.apple.com/us/app/woovent/id781588768" target="_blank" >
-						<img class="woovent_Download_App" src="/img/available.png" alt="Download Woovent on your iPhone, iPad or iPod Touch !" width="150px" style="" /> 
+						<img class="woovent_Download_App" src="img/available.png" alt="Download Woovent on your iPhone, iPad or iPod Touch !" width="150px" style="" /> 
 					</a>
 				
 					<br /><br />
@@ -846,8 +850,6 @@
 
 	function navnext(windyVar) {
 	
-		
-		console.log("coucou");
 		windyVar.next();
 		setTimeout( function() {}, 150 );
 	}

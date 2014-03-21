@@ -82,9 +82,10 @@ var wording_topFemale_shareToSee_buttonLike = "Like Woovent :)";
 
 
 //Pop up download App
-var wording_modal_download_title = "Félicitation !";
-var wording_modal_download_text1 = "Nous tenons à vous remercier pour votre soutient, c'est pourquoi vous trouverez ci dessous un lien pour télécharger notre App <strong> Gratuitement !</strong><br /><br />Retrouvez vos événements à venir, répondez aux invitations en un glissement de doigt, retrouvez automatiquement les photos de vos évènements passés etc.<br /> GRATUITEMENT !";
+var wording_modal_download_title = "Félicitations !";
+var wording_modal_download_text1 = "Vous avez aimez générer vos statistiques ?!<br />Vous adorerez Woovent : la première application dédiée à vos événements Facebook !<br /> Et en plus <strong>c'est gratuit !</strong>";
 var wording_modal_download_text2 = "Bienvenue à bord ";
+
 
 
 

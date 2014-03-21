@@ -654,11 +654,11 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 			}
 			else if (response.data[i].name){
 				nbCoverAddWindy++;
-				$(".wi-container").append('<li><img src="/img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4>'+ response.data[i].name +'</h4></li>');
+				$(".wi-container").append('<li><img src="img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4>'+ response.data[i].name +'</h4></li>');
 			}
 			else {
 				nbCoverAddWindy++;
-				$(".wi-container").append('<li><img src="/img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4></h4></li>');
+				$(".wi-container").append('<li><img src="img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4></h4></li>');
 			}
 			 
 			//on cree un objet qui contient les elements de l'event
@@ -940,143 +940,157 @@ function showBasicStats () {
 function saveUserBasicStats () {
 	
 	var Statistics = Parse.Object.extend("Statistics");
+	var queryCheckInStatisticsBase = new Parse.Query(Statistics);
 	var newUserStat = new Statistics();
 	
-	newUserStat.set("user", currentUser);
-	
-	if (invitedEventsFind){
-		newUserStat.set("answeredEventCount",answeredEventCountAllTime);
-	}
-	if (invitedFriendsFind){
-		newUserStat.set("friendsMetDuringEvent",invitedFriendsFind);
-	}
-	if (totalEventMemberCount){
-		newUserStat.set("personMetDuringEvent",totalEventMemberCount);
-	}
-	if (totalInvitRecieve){
-		newUserStat.set("invitedEventCount",totalInvitRecieve);
-	}
-	if (totalEventCreated){
-		newUserStat.set("createdEventCount",totalEventCreated);
-	}
-	
-	//on save les nouvelles stats
-	newUserStat.save(null, {
-		  success: function(userStats) {
-		  	
-		  	userStatParseObject = userStats;
-		  
-		  	//on save pour le user qu'il a bien des stats
-		  	currentUser.set("hasWebStatistics",true);
-	        currentUser.save();
-	        
-	        
-		  
-		  	//on vide les spans
-			$(".totalInvitedEventsAnswer").empty();
-			$(".totalInvitedFriends").empty();
-			$(".totalEventMember").empty();
-			$(".totalInvitedEventsRecieve").empty();
-			$(".stat_number_created").empty();
-			$(".totalInvitedFriendsFemale").empty();
-			$(".totalInvitedFriendsMale").empty();
-			$(".totalInvitedEventsRecieveRatio").empty();	
-		 	
-	 		var totalInvitedEventsRecieveRatio = Math.round(userStats.attributes.answeredEventCount * 100 /userStats.attributes.invitedEventCount) ;
-		 	
-		 	$(".totalInvitedEventsAnswer").append(userStats.attributes.answeredEventCount);
-		 	$(".totalInvitedFriends").append(userStats.attributes.friendsMetDuringEvent);
-		 	$(".totalEventMember").append(userStats.attributes.personMetDuringEvent);
-		 	$(".totalInvitedEventsRecieve").append(userStats.attributes.invitedEventCount);
-		 	$(".totalInvitedEventsRecieveRatio").append(" (" + totalInvitedEventsRecieveRatio + "%) ");
-		 	$(".stat_number_created").append(userStats.attributes.createdEventCount);
-		 	
-		 	findUserStatsPosition();
+	queryCheckInStatisticsBase.equalTo("user", currentUser);
+	queryCheckInStatisticsBase.first({
+		 success: function(userStat) {
+			if(userStat){
+				newUserStat = userStat;
+			} else {
+				newUserStat.set("user", currentUser);
+			}
 			
-			//on va récupérer les invitées filles & mecs
-			var friendsList = Parse.Object.extend("FriendsList");
-			var queryCheckFriendsList= new Parse.Query(friendsList);
-			
-			var totalMaleInvited = 0;
-			var totalFemaleInvited = 0;
-			
-			//on recupère en base les friendlist male
-			queryCheckFriendsList.equalTo("user", currentUser);
-			queryCheckFriendsList.equalTo("sexe", "male");
-			queryCheckFriendsList.limit(1000);
-			 
-			//on verif si existe
-			queryCheckFriendsList.find({
-			
-				success: function(results) {
+			if (invitedEventsFind){
+				newUserStat.set("answeredEventCount",answeredEventCountAllTime);
+			}
+			if (invitedFriendsFind){
+				newUserStat.set("friendsMetDuringEvent",invitedFriendsFind);
+			}
+			if (totalEventMemberCount){
+				newUserStat.set("personMetDuringEvent",totalEventMemberCount);
+			}
+			if (totalInvitRecieve){
+				newUserStat.set("invitedEventCount",totalInvitRecieve);
+			}
+			if (totalEventCreated){
+				newUserStat.set("createdEventCount",totalEventCreated);
+			}		 
+					 
+			//on save les nouvelles stats
+			newUserStat.save(null, {
+				  success: function(userStats) {
+				  	
+				  	userStatParseObject = userStats;
+				  
+				  	//on save pour le user qu'il a bien des stats
+				  	currentUser.set("hasWebStatistics",true);
+			        currentUser.save();
+			        
+			        
+				  
+				  	//on vide les spans
+					$(".totalInvitedEventsAnswer").empty();
+					$(".totalInvitedFriends").empty();
+					$(".totalEventMember").empty();
+					$(".totalInvitedEventsRecieve").empty();
+					$(".stat_number_created").empty();
+					$(".totalInvitedFriendsFemale").empty();
+					$(".totalInvitedFriendsMale").empty();
+					$(".totalInvitedEventsRecieveRatio").empty();	
+				 	
+			 		var totalInvitedEventsRecieveRatio = Math.round(userStats.attributes.answeredEventCount * 100 /userStats.attributes.invitedEventCount) ;
+				 	
+				 	$(".totalInvitedEventsAnswer").append(userStats.attributes.answeredEventCount);
+				 	$(".totalInvitedFriends").append(userStats.attributes.friendsMetDuringEvent);
+				 	$(".totalEventMember").append(userStats.attributes.personMetDuringEvent);
+				 	$(".totalInvitedEventsRecieve").append(userStats.attributes.invitedEventCount);
+				 	$(".totalInvitedEventsRecieveRatio").append(" (" + totalInvitedEventsRecieveRatio + "%) ");
+				 	$(".stat_number_created").append(userStats.attributes.createdEventCount);
+				 	
+				 	findUserStatsPosition();
+					
+					//on va récupérer les invitées filles & mecs
+					var friendsList = Parse.Object.extend("FriendsList");
+					var queryCheckFriendsList= new Parse.Query(friendsList);
+					
+					var totalMaleInvited = 0;
+					var totalFemaleInvited = 0;
+					
+					//on recupère en base les friendlist male
+					queryCheckFriendsList.equalTo("user", currentUser);
+					queryCheckFriendsList.equalTo("sexe", "male");
+					queryCheckFriendsList.limit(1000);
+					 
+					//on verif si existe
+					queryCheckFriendsList.find({
+					
+						success: function(results) {
+						
+								for (var i = 0; i < results.length; i++) {	
+									totalMaleInvited += results[i].attributes.eventTogetherCount;
+								}
+		
+								$(".totalInvitedFriendsMale").empty();
+								$(".totalInvitedFriendsMale").append( "" + totalMaleInvited);
+								
+								//on save pour le user
+								userStats.set("totalInvitedFriendsMale",totalMaleInvited);
+								userStats.save();
+								
+								//on replace la cover
+								initImagePosition ();
 				
-						for (var i = 0; i < results.length; i++) {	
-							totalMaleInvited += results[i].attributes.eventTogetherCount;
-						}
-
-						$(".totalInvitedFriendsMale").empty();
-						$(".totalInvitedFriendsMale").append( "" + totalMaleInvited);
-						
-						//on save pour le user
-						userStats.set("totalInvitedFriendsMale",totalMaleInvited);
-						userStats.save();
-						
-						//on replace la cover
-						initImagePosition ();
+						  },
+						  
+						  error: function(error) {
+								//console.log('\n  !!!!! Echec de la verification du nombre de mecs !!!!! \n '); 
+							  
+						  }
+						  
+					});	
+					
+					//on récupère en base les friendslist female
+					queryCheckFriendsList.equalTo("user", currentUser);
+					queryCheckFriendsList.equalTo("sexe", "female");
+					queryCheckFriendsList.limit(1000);
+					 
+					//on verif si existe
+					queryCheckFriendsList.find({
+					
+						success: function(results) {
+								
+								for (var i = 0; i < results.length; i++) {	
+									totalFemaleInvited += results[i].attributes.eventTogetherCount;
+								}
+								
+								$(".totalInvitedFriendsFemale").empty();
+								$(".totalInvitedFriendsFemale").append(totalFemaleInvited  + "&nbsp;");
+								
+								
+								//on save pour le user
+								userStats.set("totalInvitedFriendsFemale",totalFemaleInvited);
+								userStats.save();
+								
+								//on replace la cover
+								initImagePosition ();
+				
+						  },
+						  
+						  //si event existe pas : Creation
+						  error: function(error) {
+								//console.log('\n  !!!!! Echec de la verification du nombre de filles !!!!! \n '); 
+							  
+						  }
+						  
+					});	
 		
 				  },
-				  
-				  error: function(error) {
-						//console.log('\n  !!!!! Echec de la verification du nombre de mecs !!!!! \n '); 
-					  
+				  error: function() {
+				    // Execute any logic that should take place if the save fails.
+				    // error is a Parse.Error with an error code and description.
+				    //console.log('\n !!!!! Failed to save user stats !!!!! \n ');
 				  }
-				  
-			});	
-			
-			//on récupère en base les friendslist female
-			queryCheckFriendsList.equalTo("user", currentUser);
-			queryCheckFriendsList.equalTo("sexe", "female");
-			queryCheckFriendsList.limit(1000);
-			 
-			//on verif si existe
-			queryCheckFriendsList.find({
-			
-				success: function(results) {
-						
-						for (var i = 0; i < results.length; i++) {	
-							totalFemaleInvited += results[i].attributes.eventTogetherCount;
-						}
-						
-						$(".totalInvitedFriendsFemale").empty();
-						$(".totalInvitedFriendsFemale").append(totalFemaleInvited  + "&nbsp;");
-						
-						
-						//on save pour le user
-						userStats.set("totalInvitedFriendsFemale",totalFemaleInvited);
-						userStats.save();
-						
-						//on replace la cover
-						initImagePosition ();
-		
-				  },
-				  
-				  //si event existe pas : Creation
-				  error: function(error) {
-						//console.log('\n  !!!!! Echec de la verification du nombre de filles !!!!! \n '); 
-					  
-				  }
-				  
-			});	
-
-		  },
-		  error: function() {
-		    // Execute any logic that should take place if the save fails.
-		    // error is a Parse.Error with an error code and description.
-		    //console.log('\n !!!!! Failed to save user stats !!!!! \n ');
-		  }
-		});	
-		
-	$(".basicStat").show();
+				});	
+				
+		},
+		 error: function() {
+			 //console.log(" \n !!!!! Fail to retrieve user Stats !!!!! \n" );
+			 }
+		}); 
+				
+		$(".basicStat").show();
 	
 	
 
@@ -1569,12 +1583,12 @@ function printUserPhotoOnCanva(friendsPosition , creationPhotoManuelle) {
 		//on encode l'url female
 		var urlEncodedFemale = encodeURIComponent(topFriendFemale[friendsPosition].picture.data.url);
 		//on va récupérer l'url via notre proxy
-		imageFemale.src = "http://woovent.com/testimage?url=" + urlEncodedFemale ;
+		imageFemale.src = "//woovent.com/testimage?url=" + urlEncodedFemale ;
 
 		//on encode l'url male
 		var urlEncodedMale = encodeURIComponent(topFriendMale[friendsPosition].picture.data.url);
 		//on va récupérer l'url via notre proxy
-		imageMale.src = "http://woovent.com/testimage?url=" + urlEncodedMale ;
+		imageMale.src = "//woovent.com/testimage?url=" + urlEncodedMale ;
 	
 	
 		if (friendsPosition == 0) {
@@ -1699,7 +1713,7 @@ function saveSharePicture(creationPhotoManuelle)
 	
 	// Fond Image
 	var shareImg = new Image();
-	shareImg.src = 'http://woovent.com/lookback/img/BG_Canva_share.png';
+	shareImg.src = 'img/BG_Canva_share.png';
 	shareImg.onload = function(){
 	
 	ctx.drawImage(this, 0,0,750,1154,0,0,750, 1154);
@@ -1863,7 +1877,7 @@ function sharePicture()
 		 }else {
 			//si c'est une fille
 		 	if (currentUser.attributes.gender == "female"){
-		 		var textToShare = topFriendMaleFirstName[0] + ", " + topFriendMaleFirstName[1] + " and " + topFriendMaleFirstName[2] + " are my top party bro! Find yours here : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
+		 		var textToShare = topFriendMaleFirstName[0] + ", " + topFriendMaleFirstName[1] + " and " + topFriendMaleFirstName[2] + " are my top party bros! Find yours here : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
 		 	}
 		 	//si c'est un mec
 		 	else {
@@ -1889,7 +1903,7 @@ function sharePicture()
 		        
 		        	
 				  	overlay.update({
-						icon: "./img/check.png",
+						icon: "img/check.png",
 						text: "Partage effectué !"
 					});
 				
@@ -2145,7 +2159,7 @@ function fbs_click() {
 		 if (userLang == "fr"){
 		 	var twtTitle = "Wooow! Grâce à @wooventapp j'ai vu que j'avais recu " + userStatParseObject.attributes.invitedEventCount + " invitations à des events Facebook! Toutes les stats ici :";
 		 }else {
-			 var twtTitle = "Wooow! Thanks to @wooventapp I saw that i receive " + userStatParseObject.attributes.invitedEventCount + " Facebook events invite! More stats here : ";
+			 var twtTitle = "Wooow! Thanks to @wooventapp I saw that i received " + userStatParseObject.attributes.invitedEventCount + " Facebook events invites! All the stats here : ";
 		 }
 
     

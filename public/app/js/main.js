@@ -654,11 +654,11 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 			}
 			else if (response.data[i].name){
 				nbCoverAddWindy++;
-				$(".wi-container").append('<li><img src="/img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4>'+ response.data[i].name +'</h4></li>');
+				$(".wi-container").append('<li><img src="img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4>'+ response.data[i].name +'</h4></li>');
 			}
 			else {
 				nbCoverAddWindy++;
-				$(".wi-container").append('<li><img src="/img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4></h4></li>');
+				$(".wi-container").append('<li><img src="img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4></h4></li>');
 			}
 			 
 			//on cree un objet qui contient les elements de l'event

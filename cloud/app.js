@@ -15,6 +15,10 @@ app.post('/', function(req, res) {
    res.redirect('/');
  });
  
+app.post('/lookback', function(req, res) {
+   res.redirect('/lookback');
+ });
+ 
  app.get('/testimage', function(req, res) {
 	var Buffer = require('buffer').Buffer;
 	 var params = querystring.parse(url.parse(req.url).query);
