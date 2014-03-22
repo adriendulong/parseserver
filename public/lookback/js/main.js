@@ -86,6 +86,11 @@ var nbCoverAddWindy = 0;
 
 var photoHasBeenCreated = false;
 
+var userFriendArrayMale = [];
+var userFriendArrayMaleScore = [];
+var userFriendArrayFemale = [];
+var userFriendArrayFemaleScore = [];
+
 
 //options du wait pour le partage Facebook
 var opts = {
@@ -543,23 +548,41 @@ function searchUserFriendsList(userFriendApiUrl){
 		
 		//on boucle pour chaque event de la reponse
 		for (var i=0; i<response.data.length; i++) {
-				 
-				//on cree un objet qui contient les elements de l'event
+		
+				//on incremente la variable friendsListCount
+				friendsToAddCount ++;
+				
+				$(".friendsFind").empty(); 
+				$(".friendsFind").append(friendsToAddCount);
+				$(".progress-friendsAdd").attr('aria-valuemax', friendsToAddCount);
+				$(".friendsFind").show(); 
+						 
+				//on cree un objet qui contient les elements du user
 				 friendUserObject[i] = response.data[i];
-				 var pagingUrlNext = response.paging.next ;		 
-				 	 
+				 var pagingUrlNext = response.paging.next ;	
+				 
+				 
+				 if (response.data[i].gender) {
+					 if (response.data[i].gender == "female") {
+					 
+					 	userFriendArrayFemale.push(response.data[i].id);
+					 	
+					 } else {
+						userFriendArrayMale.push(response.data[i].id);
+					 } 
+					 
+					 
+				 }	 
+				 		friendsAddedCount++;
+						$(".friendsAdd").empty(); 
+						$(".friendsAdd").append(friendsAddedCount);
+						$(".progress-friendsAdd").attr('aria-valuenow', friendsAddedCount);
+						friendsAddedPourcent = friendsAddedCount / friendsToAddCount * 100;
+						$(".progress-friendsAdd").css( "width", friendsAddedPourcent+"%")
+						$(".friendsAdd").show(); 
 			}
 			
-		//on incremente la variable friendsListCount
-		friendsToAddCount +=  response.data.length;
-		$(".friendsFind").empty(); 
-		$(".friendsFind").append(friendsToAddCount);
-		$(".progress-friendsAdd").attr('aria-valuemax', friendsToAddCount);
-		$(".friendsFind").show(); 
-		
-		//on envoi l'object complet pour créer tout les friends
-		createFriendsList(friendUserObject);
-		
+
 		
 		//si il y a une pagination on relance une recherche sur lapi
 		if (pagingUrlNext) {
@@ -567,8 +590,23 @@ function searchUserFriendsList(userFriendApiUrl){
 			pagingUrlNext = null;
 		}	
 		else{
-			//on a parcour tout les potes
+		
+			$(".loading-bar-friend").hide();  
+			$(".loading-bar-event").fadeIn(); 
 			
+			//on passe tout à 0 pour les scores
+			for (var i=0; i<userFriendArrayFemale.length; i++) {
+				userFriendArrayFemaleScore[i] = 0;
+			
+			}
+			//on passe tout à 0 pour les scores
+			for (var i=0; i<userFriendArrayMale.length; i++) {
+				userFriendArrayMaleScore[i] = 0;
+			
+			}
+			
+			//on envoi l'object complet pour créer tout les friends
+			friendListCreated();
 			
 		} 
 	});
@@ -577,55 +615,15 @@ function searchUserFriendsList(userFriendApiUrl){
 /*********************************************************
    creation de la liste des amis
 *********************************************************/
-
-function createFriendsList(friendUserObject){
+function friendListCreated(){
 	
-	//on declare le tableau d'object Friendslist
-	var friendsListArrayObject = [];
 	
-	var FriendsList = Parse.Object.extend("FriendsList");
-	
-	//on boucle pour chaque friends de la reponse
-	for (var i=0; i<friendUserObject.length; i++) {
-	
-		var newFriendObject = new FriendsList();
-		
-		newFriendObject.set("user", currentUser);
-		//on set prospect avec le newfriend
-		newFriendObject.set("friends", friendUserObject[i].id);
-		//on set le sexe 
-		newFriendObject.set("sexe", friendUserObject[i].gender);
-		//on set le nombre devent ensemble à 1
-		newFriendObject.set("eventTogetherCount", 0);
-		
-		friendsListArrayObject.push(newFriendObject);
-	
-	}	
-		
-	//on save le nouveau prospet pour add en base
-	Parse.Object.saveAll(friendsListArrayObject, {
-		  success: function(results) {
-			  	for (var i = 0; i < results.length; i++) {	
-			  			friendsAddedCount++;
-						$(".friendsAdd").empty(); 
-						$(".friendsAdd").append(friendsAddedCount);
-						$(".progress-friendsAdd").attr('aria-valuenow', friendsAddedCount);
-						friendsAddedPourcent = friendsAddedCount / friendsToAddCount * 100;
-						$(".progress-friendsAdd").css( "width", friendsAddedPourcent+"%")
-						$(".friendsAdd").show();  
-			  	}
-			    if (friendsAddedCount == friendsToAddCount) {
-			    	$( ".progress-friendsAdd" ).addClass( "progress-bar-success" );
-			    	
-			    	$(".loading-bar-friend").hide();  
-			    	$(".loading-bar-event").fadeIn();  
-
 					
 				 	 //on lance la recup des invités aux events passés
 				 	 var beforeTodayAttendingApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=attending&since=2012-12-31";
 				 	 getInvitedFriendsToPastEvent(beforeTodayAttendingApiUrl);
 				 	 
-				 	 //var beforeTodayMaybeApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=maybe&since=2012-12-31";
+				 	 var beforeTodayMaybeApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=maybe&since=2012-12-31";
 				 	  //getInvitedFriendsToPastEvent(beforeTodayMaybeApiUrl);
 				 	  
 				 	  
@@ -650,16 +648,7 @@ function createFriendsList(friendUserObject){
 				 	  var totalNumberOfInvitationApiUrl = "/me/events/created?fields=id&limit=300&until=now"
 				 	  var rsvpStatus = "created";
 				 	  getUserTotalNumberOfCreatedEvent(totalNumberOfInvitationApiUrl, rsvpStatus);
-				 	  
-			 	 }
-			  
-		  },
-		  error: function( error) {
-		    // Execute any logic that should take place if the save fails.
-		    // error is a Parse.Error with an error code and description.
-		    //console.log(" \n !!!!! Failed to create a new friend:  !!!!! \n" );
-		  }
-		});
+
 		
 }
 
@@ -693,14 +682,17 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 				$(".wi-container").append('<li><img src="img/cover_default.jpg" alt="'+ nbCoverAddWindy +'" style="width : 100%;" /><h4></h4></li>');
 			}
 			 
-			//on cree un objet qui contient les elements de l'event
+//on cree un objet qui contient les elements de l'event
 			 var eventObject = response.data[i];
 			 var pagingUrlNext = response.paging.next ;
+			 
 			 invitedEventsFind++;
 			 $(".eventFind").empty(); 
 			 $(".eventFind").append(invitedEventsFind);
 			 //$(".progress-eventAdd").attr('aria-valuemax', invitedEventsFind);
 			 $(".eventFind").show();
+			 
+
 			 
 			 //on va recuperer la liste des invites amis avec le user pour chaque event
 			var apiUrlFindInvited = "SELECT uid  FROM event_member WHERE eid=" + eventObject.id + "and uid IN (SELECT uid2 FROM friend WHERE uid1 = me());";
@@ -724,11 +716,12 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 			$(".loading-bar-event").hide();  
 			$(".loading-bar-common").fadeIn(); 
 			$(".loader-woovent-circle").hide();  
-			$(".windy-event-loading").fadeIn(); 
+			$(".windy-event-loading").show(); 
 			
 			
 			
 			windyVar = initWindy();
+			navnext(windyVar);
 		}
 		
 	}
@@ -742,6 +735,9 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 function getFriendsInvitListFromAnEvent (fqlQuery) {
 	var invitedFriendsObject = [];
 
+	//on lance la requete
+	FB.api('fql', { q: fqlQuery },  function(response) {
+	
 		invitedEventsQueried++;
 		$(".eventAdd").empty(); 
 		$(".eventAdd").append(invitedEventsQueried);
@@ -750,170 +746,211 @@ function getFriendsInvitListFromAnEvent (fqlQuery) {
 		$(".progress-eventAdd").css( "width", invitedEventsQueriedPourcent+"%") 
 		if (invitedEventsQueriedPourcent == 100) {
 			$( ".progress-eventAdd" ).addClass( "progress-bar-success" );
+			$(".loading-bar-event").hide();  
+			$(".loading-bar-common").fadeIn(); 
+			$(".loader-woovent-circle").hide();  
+			$(".windy-event-loading").fadeIn(); 
 		}
 		$(".eventAdd").show(); 
-
-	//on lance la requete
-	FB.api('fql', { q: fqlQuery },  function(response) {
-	
-
 		 
 		//on boucle pour chaque invite de la reponse
 		for (var i=0; i<response.data.length; i++) {
+		
+			invitedFriendsFind++;
+			$(".invitFind").empty(); 
+			$(".invitFind").append(invitedFriendsFind);
+			$(".progress-invitAdd").attr('aria-valuemax', invitedFriendsFind);
+			$(".invitFind").show();  
+
 				 
 				 //on cree un objet qui contient les elements du user invite
 				 invitedFriendsObject[i] = response.data[i];
+				 
+				 if (response.data[i].uid) {
+					 var friendsWithEventPosition = userFriendArrayMale.indexOf(response.data[i].uid.toString());
+					 
+					 // si on a trouvé dans les mecs
+					 if (friendsWithEventPosition != -1) {
+						 userFriendArrayMaleScore[friendsWithEventPosition] = userFriendArrayMaleScore[friendsWithEventPosition] + 1;
+					 } 
+					 else {
+					 	//on regarde dans le tableau des filles
+						var friendsWithEventPosition = userFriendArrayFemale.indexOf(response.data[i].uid.toString());
+						
+						if (friendsWithEventPosition != -1) {
+						 	userFriendArrayFemaleScore[friendsWithEventPosition] = userFriendArrayFemaleScore[friendsWithEventPosition] + 1;
+						} 
+						else{
+							console.log ("Invit Trouve ni fille ni dans les mecs : " + response.data[i].uid);
+						} 
+					 }
+					 
+				  //on ajoute 1 au invite retrouve save
+				  invitedFriendsQueried++;
+				  $(".invitAdd").empty(); 
+				  $(".invitAdd").append(invitedFriendsQueried);
+				  $(".progress-invitAdd").attr('aria-valuenow', invitedFriendsQueried);
+				  invitedFriendsQueriedPourcent = invitedFriendsQueried / invitedFriendsFind * 100;
+				  $(".progress-invitAdd").css( "width", invitedFriendsQueriedPourcent+"%") 
+				  $(".invitAdd").show(); 
 
-				 //on va ajouter un evenement en commun entre les deux users
-				
 
+				 }
 				 	 
 			}
+	
+
+			
+		if (allEventFetchedCount == 1 && invitedEventsFind == invitedEventsQueried) {
+			saveUserFriendsStats();
+		}
 		
-		addEventInCommon(invitedFriendsObject);
 		
 		});
 
 }
+function findTop3InArray (arrayToSort) {
 
+	 var i, one, two, three, pos1, pos2, pos3,posNum;
+	    one = -9999;
+	    two = -9999;
+	    three = -9999;
+	
+	    for (i = 0; i < arrayToSort.length; i += 1) {
+	        num = arrayToSort[i];
+	        posNum = i;
+	        if (num > three) {
+	            if (num >= two) {
+	            	pos3 = pos2;
+	                three = two;
+	                if (num >= one) {
+	                	pos2 = pos1;
+	                	pos1 = posNum;
+	                    two = one;
+	                    one = num;
+	                }
+	                else {
+	                    two = num;
+	                    pos2 = posNum;
+	                }
+	            }
+	            else {
+	                three = num;
+	                pos3 = posNum;
+	            }
+	        }
+	    }
+	
+	    return [pos1, pos2, pos3]
+	
+}
 
 /****************************************************
-   On ajoute un evenement en commun entre le friend et le current user
+   On save les stats des friends des users
 *****************************************************/
 
-function addEventInCommon (invitedFriendsObjectOfEvent) {
-	var invitedFriendsId = [];
+function saveUserFriendsStats () {
+
+	//on declare le tableau d'object Friendslist
+	var friendsListArrayObject = [];
+	var FriendsList = Parse.Object.extend("FriendsList");
+ 
+	var top3MalePosition = findTop3InArray(userFriendArrayMaleScore);
+	var top3FemalePosition = findTop3InArray(userFriendArrayFemaleScore);
 	
-	//on creer la requete pour verif si existe dans la table friends
-	 var FriendsList = Parse.Object.extend("FriendsList");
-	 var queryCheckInFriendsListBase = new Parse.Query(FriendsList);
-	 
-	//on converti les id en string
-	for (var i=0; i<invitedFriendsObjectOfEvent.length; i++) {
-		invitedFriendsId[i] = invitedFriendsObjectOfEvent[i].uid.toString();
+	
+	//on boucle pour chaque friends fille de la reponse
+	for (var i=0; i< 3; i++) {
+	
+		var newFriendObject = new FriendsList();
 		
-		invitedFriendsFind++;
-		$(".invitFind").empty(); 
-		$(".invitFind").append(invitedFriendsFind);
-		$(".progress-invitAdd").attr('aria-valuemax', invitedFriendsFind);
-		$(".invitFind").show();  
-		}
+		newFriendObject.set("user", currentUser);
+		//on set prospect avec le newfriend
+		newFriendObject.set("friends", userFriendArrayFemale[top3FemalePosition[i]]);
+		//on set le sexe 
+		newFriendObject.set("sexe", "female");
+		//on set le nombre devent ensemble à 1
+		newFriendObject.set("eventTogetherCount", userFriendArrayFemaleScore[top3FemalePosition[i]]);
+		
+		friendsListArrayObject.push(newFriendObject);
+		
+		
 	
-	queryCheckInFriendsListBase.equalTo("user", currentUser);
+	}	
+		//on boucle pour chaque friends mec de la reponse
+	for (var i=0; i< 3; i++) {
 	
-	 // Finds objects from list of invited
-	 queryCheckInFriendsListBase.containedIn("friends",invitedFriendsId); 
-	 queryCheckInFriendsListBase.limit(1000);
+		var newFriendObject = new FriendsList();
+		
+		newFriendObject.set("user", currentUser);
+		//on set prospect avec le newfriend
+		newFriendObject.set("friends", userFriendArrayMale[top3MalePosition[i]]);
+		//on set le sexe 
+		newFriendObject.set("sexe", "male");
+		//on set le nombre devent ensemble à 1
+		newFriendObject.set("eventTogetherCount", userFriendArrayMaleScore[top3MalePosition[i]]);
+		
+		friendsListArrayObject.push(newFriendObject);
+		
+
 	
-	 
-	 //on verif si existe
-	 queryCheckInFriendsListBase.find({
-		 success: function(results) {
-		 	
-		 	for (var i = 0; i < results.length; i++) {	
-				//on incremente le nombre devent en commun
-				results[i].increment("eventTogetherCount");	
-			
-			}
-			
-			//si plus de 1000 amis en commun à un event
-			if (invitedFriendsId.length >= 1000) {
-				
-			 		//on ajoute la différence à notre somme pour quand meme passer à la suite mais on 
-			 		//analyse pas les user au dessus de 1000
-			 		var nbtemp = invitedFriendsId.length - 1000;
-			 		invitedFriendsQueried+= nbtemp;
-		 		
-			}
-			
-				//on save
-				Parse.Object.saveAll(results, {
-				  success: function(resultsCreated) {
-				  
-				  	//on affiche la photo suivante que quand on a ajoute toutes les photos des events
-				  	if (allEventFetchedCount == 2) {
+	}
+	
+		
+	//on save le nouveau prospet pour add en base
+	Parse.Object.saveAll(friendsListArrayObject, {
+		  success: function(results) {
+		  		//on save les stats du user et on les affiche
+		  		saveUserBasicStats();					  		
+		  		
+		  		//on va regarder si il a liker ou share deja
+		  		//si il a deja share ou like on affiche tout
+		  		if (currentUser.attributes.hasShareOrLike == true) {
+		  		
+			  		//on cherche les meilleurs amis male et on affiche	
+					findUserBestFriendsMale(top3ToPrint);
+			  		
+			  		//on cherche les meilleurs amies female et on affiche
+			  		findUserBestFriendsFemale(top3ToPrint);
+			  		
+		  		}
+		  		
+		  		//si il n'a pas share ou like on regarde si c'est un mec ou une fille
+		  		else {
+		  			//si c'est un mec, on affiche les top potes et on met le shareToSee sur les tops meuf
+			  		if (currentUser.attributes.gender == "male"){
+				  		//on cherche les meilleurs amis male
+				  		findUserBestFriendsMale(top3ToPrint);
+				  		findUserBestFriendsFemale(top3NotToPrint);
 				  		
-				  		navnext(windyVar);
-				  	}
-				  
-				  	  for (var i = 0; i < resultsCreated.length; i++) {	
-				  	  
-					  	  //on ajoute 1 au invite retrouve save
-						  invitedFriendsQueried++;
-						  $(".invitAdd").empty(); 
-						  $(".invitAdd").append(invitedFriendsQueried);
-						  $(".progress-invitAdd").attr('aria-valuenow', invitedFriendsQueried);
-						  invitedFriendsQueriedPourcent = invitedFriendsQueried / invitedFriendsFind * 100;
-						  $(".progress-invitAdd").css( "width", invitedFriendsQueriedPourcent+"%") 
-						  $(".invitAdd").show();  
-					  }
-					 //on compare avec le nombre total trouve d'invite amis
-					 // si on en a save autant qu'on en a trouve on va cherche les meilleures potes
-					 if (invitedFriendsQueried == invitedFriendsFind && allEventFetched == true){
-						  		//on passe la loading barre en verte
-						  		$( ".progress-invitAdd" ).addClass( "progress-bar-success" );
-						  		
-						  		
-						  		//on save les stats du user et on les affiche
-						  		saveUserBasicStats();					  		
-						  		
-						  		
-						  		//on va regarder si il a liker ou share deja
-						  		//si il a deja share ou like on affiche tout
-						  		if (currentUser.attributes.hasShareOrLike == true) {
-						  		
-							  		//on cherche les meilleurs amis male et on affiche	
-									findUserBestFriendsMale(top3ToPrint);
-							  		
-							  		//on cherche les meilleurs amies female et on affiche
-							  		findUserBestFriendsFemale(top3ToPrint);
-							  		
-						  		}
-						  		
-						  		//si il n'a pas share ou like on regarde si c'est un mec ou une fille
-						  		else {
-						  			//si c'est un mec, on affiche les top potes et on met le shareToSee sur les tops meuf
-							  		if (currentUser.attributes.gender == "male"){
-								  		//on cherche les meilleurs amis male
-								  		findUserBestFriendsMale(top3ToPrint);
-								  		findUserBestFriendsFemale(top3NotToPrint);
-								  		
-								  		//on masque le top fille avec le ShareToSee
-								  		printShareToSee()
-								  		
-								  		
-							  		}
-							  		//si c'est une fille on affiche les top copines et on met le shareToSee sur les tops mecs
-							  		else {
-								  		//on cherche les meilleurs amies female
-								  		findUserBestFriendsFemale(top3ToPrint);
-								  		findUserBestFriendsMale(top3NotToPrint);
-								  		
-								  		//on masque le top mec avec le ShareToSee
-								  		printShareToSee()
-								  		
-							  		}
-							  		
-						  		}
-						  		
-
-						  		
-
-						  }
-					  
-				  },
-				  error: function() {
-				    //console.log(" \n !!!!! !!!!! \n" );
-				  }
-				}); 
-			
-		  },
-		  //si erreur
-		  error: function(error) {
-				//console.log('\n  !!!!! Echec de l ajout d un event en commun !!!!! \n '); 
+				  		//on masque le top fille avec le ShareToSee
+				  		printShareToSee()
+				  		
+				  		
+			  		}
+			  		//si c'est une fille on affiche les top copines et on met le shareToSee sur les tops mecs
+			  		else {
+				  		//on cherche les meilleurs amies female
+				  		findUserBestFriendsFemale(top3ToPrint);
+				  		findUserBestFriendsMale(top3NotToPrint);
+				  		
+				  		//on masque le top mec avec le ShareToSee
+				  		printShareToSee()
+				  		
+			  		}
+			  		
+		  		}
 			  
+		  },
+		  error: function( error) {
+		    // Execute any logic that should take place if the save fails.
+		    // error is a Parse.Error with an error code and description.
+		    //console.log(" \n !!!!! Failed to create a new friend:  !!!!! \n" );
 		  }
-		});		
+		});
+
+
+
 }
 
 /****************************************************
@@ -974,157 +1011,105 @@ function showBasicStats () {
 function saveUserBasicStats () {
 	
 	var Statistics = Parse.Object.extend("Statistics");
-	var queryCheckInStatisticsBase = new Parse.Query(Statistics);
 	var newUserStat = new Statistics();
 	
-	queryCheckInStatisticsBase.equalTo("user", currentUser);
-	queryCheckInStatisticsBase.first({
-		 success: function(userStat) {
-			if(userStat){
-				newUserStat = userStat;
-			} else {
-				newUserStat.set("user", currentUser);
+	newUserStat.set("user", currentUser);
+	
+	if (invitedEventsFind){
+		newUserStat.set("answeredEventCount",answeredEventCountAllTime);
+	}
+	if (invitedFriendsFind){
+		newUserStat.set("friendsMetDuringEvent",invitedFriendsFind);
+	}
+	if (totalEventMemberCount){
+		newUserStat.set("personMetDuringEvent",totalEventMemberCount);
+	}
+	if (totalInvitRecieve){
+		newUserStat.set("invitedEventCount",totalInvitRecieve);
+	}
+	if (totalEventCreated){
+		newUserStat.set("createdEventCount",totalEventCreated);
+	}
+	
+	//on save les nouvelles stats
+	newUserStat.save(null, {
+		  success: function(userStats) {
+		  	
+		  	userStatParseObject = userStats;
+		  
+		  	//on save pour le user qu'il a bien des stats
+		  	currentUser.set("hasWebStatistics",true);
+	        currentUser.save();
+	        
+		  
+		  	//on vide les spans
+			$(".totalInvitedEventsAnswer").empty();
+			$(".totalInvitedFriends").empty();
+			$(".totalEventMember").empty();
+			$(".totalInvitedEventsRecieve").empty();
+			$(".stat_number_created").empty();
+			$(".totalInvitedFriendsFemale").empty();
+			$(".totalInvitedFriendsMale").empty();
+			$(".totalInvitedEventsRecieveRatio").empty();	
+		 	
+	 		var totalInvitedEventsRecieveRatio = Math.round(userStats.attributes.answeredEventCount * 100 /userStats.attributes.invitedEventCount) ;
+		 	
+		 	$(".totalInvitedEventsAnswer").append(userStats.attributes.answeredEventCount);
+		 	$(".totalInvitedFriends").append(userStats.attributes.friendsMetDuringEvent);
+		 	$(".totalEventMember").append(userStats.attributes.personMetDuringEvent);
+		 	$(".totalInvitedEventsRecieve").append(userStats.attributes.invitedEventCount);
+		 	$(".totalInvitedEventsRecieveRatio").append(" (" + totalInvitedEventsRecieveRatio + "%) ");
+		 	$(".stat_number_created").append(userStats.attributes.createdEventCount);
+		 	
+		 	findUserStatsPosition();
+			
+			
+			var totalMaleInvited = 0;
+			var totalFemaleInvited = 0;
+			 
+
+			for (var i = 0; i < userFriendArrayMaleScore.length; i++) {	
+				totalMaleInvited += userFriendArrayMaleScore[i];
 			}
 			
-			if (invitedEventsFind){
-				newUserStat.set("answeredEventCount",answeredEventCountAllTime);
-			}
-			if (invitedFriendsFind){
-				newUserStat.set("friendsMetDuringEvent",invitedFriendsFind);
-			}
-			if (totalEventMemberCount){
-				newUserStat.set("personMetDuringEvent",totalEventMemberCount);
-			}
-			if (totalInvitRecieve){
-				newUserStat.set("invitedEventCount",totalInvitRecieve);
-			}
-			if (totalEventCreated){
-				newUserStat.set("createdEventCount",totalEventCreated);
-			}		 
-					 
-			//on save les nouvelles stats
-			newUserStat.save(null, {
-				  success: function(userStats) {
-				  	
-				  	userStatParseObject = userStats;
-				  
-				  	//on save pour le user qu'il a bien des stats
-				  	currentUser.set("hasWebStatistics",true);
-			        currentUser.save();
-			        
-			        
-				  
-				  	//on vide les spans
-					$(".totalInvitedEventsAnswer").empty();
-					$(".totalInvitedFriends").empty();
-					$(".totalEventMember").empty();
-					$(".totalInvitedEventsRecieve").empty();
-					$(".stat_number_created").empty();
-					$(".totalInvitedFriendsFemale").empty();
-					$(".totalInvitedFriendsMale").empty();
-					$(".totalInvitedEventsRecieveRatio").empty();	
-				 	
-			 		var totalInvitedEventsRecieveRatio = Math.round(userStats.attributes.answeredEventCount * 100 /userStats.attributes.invitedEventCount) ;
-				 	
-				 	$(".totalInvitedEventsAnswer").append(userStats.attributes.answeredEventCount);
-				 	$(".totalInvitedFriends").append(userStats.attributes.friendsMetDuringEvent);
-				 	$(".totalEventMember").append(userStats.attributes.personMetDuringEvent);
-				 	$(".totalInvitedEventsRecieve").append(userStats.attributes.invitedEventCount);
-				 	$(".totalInvitedEventsRecieveRatio").append(" (" + totalInvitedEventsRecieveRatio + "%) ");
-				 	$(".stat_number_created").append(userStats.attributes.createdEventCount);
-				 	
-				 	findUserStatsPosition();
-					
-					//on va récupérer les invitées filles & mecs
-					var friendsList = Parse.Object.extend("FriendsList");
-					var queryCheckFriendsList= new Parse.Query(friendsList);
-					
-					var totalMaleInvited = 0;
-					var totalFemaleInvited = 0;
-					
-					//on recupère en base les friendlist male
-					queryCheckFriendsList.equalTo("user", currentUser);
-					queryCheckFriendsList.equalTo("sexe", "male");
-					queryCheckFriendsList.limit(1000);
-					 
-					//on verif si existe
-					queryCheckFriendsList.find({
-					
-						success: function(results) {
+			
+
+			$(".totalInvitedFriendsMale").empty();
+			$(".totalInvitedFriendsMale").append( "" + totalMaleInvited);
+			
+			//on save pour le user
+			userStats.set("totalInvitedFriendsMale",totalMaleInvited);
+			userStats.save();
+			
+			//on replace la cover
+			initImagePosition ();
+
 						
-								for (var i = 0; i < results.length; i++) {	
-									totalMaleInvited += results[i].attributes.eventTogetherCount;
-								}
+			for (var i = 0; i < userFriendArrayFemaleScore.length; i++) {	
+				totalFemaleInvited += userFriendArrayFemaleScore[i];
+			}
+			
+			$(".totalInvitedFriendsFemale").empty();
+			$(".totalInvitedFriendsFemale").append(totalFemaleInvited  + "&nbsp;");
+			
+			
+			//on save pour le user
+			userStats.set("totalInvitedFriendsFemale",totalFemaleInvited);
+			userStats.save();
+			
+			//on replace la cover
+			initImagePosition ();
+						
+
+		  },
+		  error: function() {
+		    // Execute any logic that should take place if the save fails.
+		    // error is a Parse.Error with an error code and description.
+		    //console.log('\n !!!!! Failed to save user stats !!!!! \n ');
+		  }
+		});	
 		
-								$(".totalInvitedFriendsMale").empty();
-								$(".totalInvitedFriendsMale").append( "" + totalMaleInvited);
-								
-								//on save pour le user
-								userStats.set("totalInvitedFriendsMale",totalMaleInvited);
-								userStats.save();
-								
-								//on replace la cover
-								initImagePosition ();
-				
-						  },
-						  
-						  error: function(error) {
-								//console.log('\n  !!!!! Echec de la verification du nombre de mecs !!!!! \n '); 
-							  
-						  }
-						  
-					});	
-					
-					//on récupère en base les friendslist female
-					queryCheckFriendsList.equalTo("user", currentUser);
-					queryCheckFriendsList.equalTo("sexe", "female");
-					queryCheckFriendsList.limit(1000);
-					 
-					//on verif si existe
-					queryCheckFriendsList.find({
-					
-						success: function(results) {
-								
-								for (var i = 0; i < results.length; i++) {	
-									totalFemaleInvited += results[i].attributes.eventTogetherCount;
-								}
-								
-								$(".totalInvitedFriendsFemale").empty();
-								$(".totalInvitedFriendsFemale").append(totalFemaleInvited  + "&nbsp;");
-								
-								
-								//on save pour le user
-								userStats.set("totalInvitedFriendsFemale",totalFemaleInvited);
-								userStats.save();
-								
-								//on replace la cover
-								initImagePosition ();
-				
-						  },
-						  
-						  //si event existe pas : Creation
-						  error: function(error) {
-								//console.log('\n  !!!!! Echec de la verification du nombre de filles !!!!! \n '); 
-							  
-						  }
-						  
-					});	
-		
-				  },
-				  error: function() {
-				    // Execute any logic that should take place if the save fails.
-				    // error is a Parse.Error with an error code and description.
-				    //console.log('\n !!!!! Failed to save user stats !!!!! \n ');
-				  }
-				});	
-				
-		},
-		 error: function() {
-			 //console.log(" \n !!!!! Fail to retrieve user Stats !!!!! \n" );
-			 }
-		}); 
-				
-		$(".basicStat").show();
+	$(".basicStat").show();
 	
 	
 

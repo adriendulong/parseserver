@@ -907,11 +907,11 @@
 		}
 
 
-
 	function navnext(windyVar) {
 	
+		
 		windyVar.next();
-		setTimeout( function() {}, 150 );
+		setTimeout( function() {navnext(windyVar);}, 150 );
 	}
 	
 		
