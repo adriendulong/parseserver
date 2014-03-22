@@ -825,14 +825,21 @@ function checkPublishPermission(){
 function postLinkOnEventWall(){
 
 	var urlToShare = "http://www.woovent.com/e/" + eventParseObjectVar.id ;
-	var messageToShare = "Je viens d'ajouter " + photoAdded + " photos de cet évènement. Retrouvez les toutes à cette adresse sur Woovent !" ;
 	
+	var userLang = navigator.language || navigator.userLanguage; 
+		 	 
+	if (userLang == "fr"){
+		var messageToShare = "Je viens d'ajouter " + photoAdded + " photos de cet évènement. Retrouvez les toutes à cette adresse sur Woovent !" ;
+	}
+	else {
+		var messageToShare = "I've just add " + photoAdded + " photos to this event. See all the photos at this adress on Woovent !" ;
+	}
 	var apiURL = "/" + eventParseObjectVar.attributes.eventId + "/feed" ;
 	
 	var pictureURL = photoAddedObject.attributes.full_image._url;
 	
 	//on fait le post
-	/*
+	
 	FB.api(
 		    apiURL ,
 		    "POST",
@@ -844,7 +851,7 @@ function postLinkOnEventWall(){
 		    function (response) {
 		      if (response && !response.error) {
 		      
-		        /* handle the result 
+		        /* handle the result */
 		        $('#uploadPicture').modal('hide');
 				$("#photoLoading").show();
 				$("#shareLink").hide();
@@ -853,7 +860,7 @@ function postLinkOnEventWall(){
 		      }
 		    }
 	);
-	*/
+	
 }
 
 /*************************************
@@ -1071,7 +1078,7 @@ if(eventParseObjectVar.attributes.location){
 
 $('.eventURL').empty();
 if(eventParseObjectVar.attributes.eventId){
-	$('.eventURL').append("<a href='http://www.facebook.com/"+ eventParseObjectVar.attributes.eventId + "' target=\"_blank\" > http://www.facebook.com/"+ eventParseObjectVar.attributes.eventId + "<\/a>");	
+	$('.eventURL').append("<a href='//www.facebook.com/"+ eventParseObjectVar.attributes.eventId + "' target=\"_blank\" > http://www.facebook.com/"+ eventParseObjectVar.attributes.eventId + "<\/a>");	
 }else {
 	$('.eventURL').append("Non Défini");	
 }
@@ -1235,7 +1242,7 @@ function openIframe(imageId){
 	$(".next-button-iframe").css('top',windowVisibleHeight);
 	$(".previous-button-iframe").css('top',windowVisibleHeight);
 
-	var iframeSrc = "http://www.woovent.com/p/" + imageId;
+	var iframeSrc = "//www.woovent.com/p/" + imageId;
 
 	$(".iframe-img").attr("src", iframeSrc);
 	$(".ifram-content").fadeIn();

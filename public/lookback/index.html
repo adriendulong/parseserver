@@ -12,7 +12,7 @@
         	<!-- Site Infos -->
 		<title> Facebook Event Lookback : Discover your parties’ best friends in one picture ! </title>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	    <meta name="description" content=" Facebook Event Lookback : Discover your parties’ best friends and your parties’ stats in one picture! Better than Tinder, Woovent help you find your top 3 parties bros and sis! You might be surprised! And it’s free, you only have to click here :) Discover in a few clicks the number of invites your received, the number of events you attended... " />
+	    <meta name="description" content="Discover your parties’ best friends and your parties’ stats in one picture! Better than Tinder, Woovent help you find your top 3 parties bros and sis! You might be surprised! And it’s free, you only have to click here :) Discover in a few clicks the number of invites your received, the number of events you attended... " />
 	    <meta name="keywords" content="Woovent, wovent, wouvent, evenement, event, evenements, facebook, app, iphone, appstore, events" />
 	    <meta name="author" content="Woovent" />
 	    
@@ -46,6 +46,8 @@
 		<meta name="apple-mobile-web-app-title" content="Woovent : Your Facebook Event">
 		
 		<meta name="apple-itunes-app" content="app-id=781588768, app-argument=foobar">
+		
+		<link rel="shortcut icon" href="../images/favicon.ico">
 		
 		<!-- Font -->
 		<link href='//fonts.googleapis.com/css?family=Roboto:300italic,400,400italic,700,700italic,500,500italic,300,100' rel='stylesheet' type='text/css'>
@@ -119,6 +121,17 @@
 	       // Additional init code here
 		
 		</script>
+     
+     
+     <!--Start of Zopim Live Chat Script-->
+	<script type="text/javascript">
+	window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+	d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+	_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
+	$.src='//v2.zopim.com/?1pQWJJHKxo4Lc4b5GNmXzbMVNK7wtuxO';z.t=+new Date;$.
+	type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
+	</script>
+	<!--End of Zopim Live Chat Script-->
         
      <!-- Placez cette balise dans l'en-tête ou juste avant la balise de fermeture du corps de texte. -->
 	<script type="text/javascript" src="https://apis.google.com/js/platform.js">
@@ -160,7 +173,7 @@
         </div><!-- Fin  navbar header -->
         <div class="navbar-collapse collapse navbar-right header_nav_link" >
         	 <ul class="nav navbar-nav visible-xs">
-		        	 <li class=""><a href="https://itunes.apple.com/fr/app/woovent/id781588768" target="_blank" alt="Facebook events App easy with Woovent App for iPhone !"> &nbsp;&nbsp; <i class="icon-apple " style="font-size : 20px;"></i>&nbsp;&nbsp; <script>document.write(wording_menu_downloadApp);</script> </a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</li>
+		        	 <li class=""><a href="https://itunes.apple.com/fr/app/woovent/id781588768" target="_blank" onclick="_gaq.push(['_trackEvent', 'DownloadApp', 'DownloadFromHeader', 'DownloadFromHeader']);" alt="Facebook events App easy with Woovent App for iPhone !"> &nbsp;&nbsp; <i class="icon-apple " style="font-size : 20px;"></i>&nbsp;&nbsp; <script>document.write(wording_menu_downloadApp);</script> </a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</li>
 	            	 <li class=""><a href="#statistiques_anchor" alt="Discover your Facebook events stats with Woovent App for iPhone !"> &nbsp;&nbsp; <i class="icon-trophy " style="font-size : 20px;"></i>&nbsp;&nbsp; <script>document.write(wording_menu_stat);</script> </a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</li>
 		            <li class=""><a href="#topMale_anchor" alt="Discover your best party bro' with the app Woovent !"> &nbsp;&nbsp; <i class="icon-male text_bleu" style="font-size : 20px;"></i>&nbsp;&nbsp; <script>document.write(wording_menu_topmec);</script> </a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</li>
 		            <li class=""><a href="#topFemale_anchor" alt="Discover your best party girl with Woovent !"> &nbsp;&nbsp; <i class="icon-female text_rose" style="font-size : 20px;"></i>&nbsp;&nbsp; <script>document.write(wording_menu_topfille);</script> </a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</li>
@@ -171,8 +184,8 @@
         	 
         	 <ul class="nav navbar-nav hidden-xs">
 
-	            <li><a  href="https://itunes.apple.com/fr/app/woovent/id781588768" target="_blank" alt="Manage your events on facebook with Woovent App for iPhone"><script>document.write(wording_menu_downloadApp);</script></a></li>
-	            <li><a onclick="fblogin()" class="btn-login" alt="Facebook events on steroids! "><script>document.write(button_login);</script>  </a></li>
+	            <li><a  href="https://itunes.apple.com/fr/app/woovent/id781588768" onclick="_gaq.push(['_trackEvent', 'DownloadApp', 'DownloadFromHeader', 'DownloadFromHeader']);" target="_blank" alt="Manage your events on facebook with Woovent App for iPhone"><script>document.write(wording_menu_downloadApp);</script></a></li>
+	            <li><a onclick="fblogin()" class="btn-login" alt="Facebook events on steroids! " style="display : none;"><script>document.write(button_login);</script>  </a></li>
 	            <li><a onclick="logoutUser()" class="btn-logged-in" alt="Manage your facebooks events with Woovent"><script>document.write(button_logout);</script></a></li>
         	 </ul>
         </div><!--/.navbar-collapse -->
@@ -591,7 +604,7 @@
 			<center>
 			<br /><br />
 			<h2><div class=" horizontal_separator "> </div> <script>document.write(wording_topFemale_title1);</script> <span class="text_rose "><script>document.write(wording_topFemale_title2);</script></span> <div class=" horizontal_separator "> </div></h2>
-			<p> Voici tes 3 meilleurs meufs de soirées ! </p><br />
+			<p> <script>document.write(wording_topFemale_subtitle1);</script></p><br />
 			
 			<div class="topFemale_Stats" >
 				<div class="row">
@@ -754,15 +767,62 @@
 	
 		<!-- AddThis Button BEGIN -->
 		<div class="addthis_toolbox addthis_floating_style addthis_counter_style hidden-xs hidden-sm" style="right: 5px;top: 100px;padding-left: 0px;">
-		<div class="fb-like" data-href="//www.facebook.com/woovent" data-width="450" data-layout="box_count" data-show-faces="false" data-send="false"></div>
+		<div class="fb-like" data-href="//www.facebook.com/woovent" data-width="450" data-layout="box_count" data-show-faces="false" data-send="false" onclick="_gaq.push(['_trackEvent', 'AddThis', 'LikeFromAddThis', 'LikeFromAddThis']);"></div>
 		
-		<a href="//www.woovent.com" class="twitter-share-button" data-url="www.woovent.com" data-counturl="http://www.woovent.com" data-lang="en" data-count="vertical">Tweet</a>
+		<a href="//www.woovent.com" class="twitter-share-button" data-url="www.woovent.com" data-counturl="http://www.woovent.com" data-lang="en" data-count="vertical" onclick="_gaq.push(['_trackEvent', 'AddThis', 'TweetFromAddThis', 'TweetFromAddThis']);" >Tweet</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>	
 		<div class="g-plusone" data-size="tall" data-href="http://www.woovent.com"></div>
 		<a class="addthis_counter"></a>
 		</div>
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51fceefb2f5ad1e7"></script>
 		<!-- AddThis Button END -->	
+    
+    
+    	<script>
+		// Include the UserVoice JavaScript SDK (only needed once on a page)
+		UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/WBu9NK2XP2NXeGUDeGNLQ.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+		
+		//
+		// UserVoice Javascript SDK developer documentation:
+		// https://www.uservoice.com/o/javascript-sdk
+		//
+		
+		// Set colors
+		UserVoice.push(['set', {
+		  accent_color: '#e2753a',
+		  trigger_color: 'white',
+		  trigger_background_color: '#6aba2e'
+		}]);
+		
+		// Identify the user and pass traits
+		// To enable, replace sample data with actual user traits and uncomment the line
+		UserVoice.push(['identify', {
+		  //email:      'john.doe@example.com', // User’s email address
+		  //name:       'John Doe', // User’s real name
+		  //created_at: 1364406966, // Unix timestamp for the date the user signed up
+		  //id:         123, // Optional: Unique id of the user (if set, this should not change)
+		  //type:       'Owner', // Optional: segment your users by type
+		  //account: {
+		  //  id:           123, // Optional: associate multiple users with a single account
+		  //  name:         'Acme, Co.', // Account name
+		  //  created_at:   1364406966, // Unix timestamp for the date the account was created
+		  //  monthly_rate: 9.99, // Decimal; monthly rate of the account
+		  //  ltv:          1495.00, // Decimal; lifetime value of the account
+		  //  plan:         'Enhanced' // Plan name for the account
+		  //}
+		}]);
+		
+		// Add default trigger to the bottom-right corner of the window:
+		UserVoice.push(['addTrigger', { mode: 'smartvote', trigger_position: 'bottom-right' }]);
+		
+		// Or, use your own custom trigger:
+		//UserVoice.push(['addTrigger', '#id', { mode: 'smartvote' }]);
+		
+		// Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
+		UserVoice.push(['autoprompt', {}]);
+		</script>
+    
+    
     
     </body>
 <!----------------------------------------------------------------------------
@@ -787,7 +847,7 @@
 					<script>document.write(wording_modal_download_text1);</script>
 					<br /><br />
 					
-					<a href="https://www.itunes.apple.com/us/app/woovent/id781588768" target="_blank" >
+					<a href="https://itunes.apple.com/us/app/woovent/id781588768" onclick="_gaq.push(['_trackEvent', 'DownloadModal', 'ClickOnDownloadButton', 'ClickOnDownloadButton']);" target="_blank" >
 						<img class="woovent_Download_App" src="img/available.png" alt="Download Woovent on your iPhone, iPad or iPod Touch !" width="150px" style="" /> 
 					</a>
 				

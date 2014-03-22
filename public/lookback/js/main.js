@@ -86,6 +86,30 @@ var nbCoverAddWindy = 0;
 
 var photoHasBeenCreated = false;
 
+
+//options du wait pour le partage Facebook
+var opts = {
+lines: 13, // The number of lines to draw
+length: 11, // The length of each line
+width: 5, // The line thickness
+radius: 17, // The radius of the inner circle
+corners: 1, // Corner roundness (0..1)
+rotate: 0, // The rotation offset
+color: '#FFF', // #rgb or #rrggbb
+speed: 1, // Rounds per second
+trail: 60, // Afterglow percentage
+shadow: false, // Whether to render a shadow
+hwaccel: false, // Whether to use hardware acceleration
+className: 'spinner', // The CSS class to assign to the spinner
+zIndex: 2e9, // The z-index (defaults to 2000000000)
+top: 'auto', // Top position relative to parent in px
+left: 'auto' // Left position relative to parent in px
+};
+
+
+var overlay;
+var target = document.createElement("div");
+
 /*************************************
    vérification user logué ou non
 *************************************/
@@ -228,6 +252,8 @@ function isUserConnected(){
 			  	findUserBestFriendsMale(top3ToPrint);
 			  	findUserBestFriendsFemale(top3NotToPrint);
 			}
+			
+			_gaq.push(['_trackEvent', 'Like', 'UserLikeWooventFanPage', 'UserLikeWooventFanPage']);
 
 	    }
 	);
@@ -469,11 +495,17 @@ function getUserFriendList (userFriendApiUrl) {
 			}
 			//si il y en avant deja, on supprime tout
 			if (results.length > 0){
-			alert("Vous aviez déjà des amis, mais pas de compte en base. Nous allons repartir à 0 cela risque de prendre un tout petit peu plus de temps :)");
+			document.body.appendChild(target);
+			var spinner = new Spinner(opts).spin(target);
+			overlay = iosOverlay({
+						text: "Recovering your stats",
+						spinner: spinner
+					});	
+					
 			Parse.Object.destroyAll(friendsListInBase, function(success, error) {
 			    if (success) {
 			      // All the objects were delete
-			      
+			      overlay.hide();
 			      //on lance la recup des amis
 				  searchUserFriendsList(userFriendApiUrl);
 			      
@@ -593,8 +625,8 @@ function createFriendsList(friendUserObject){
 				 	 var beforeTodayAttendingApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=attending&since=2012-12-31";
 				 	 getInvitedFriendsToPastEvent(beforeTodayAttendingApiUrl);
 				 	 
-				 	 var beforeTodayMaybeApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=maybe&since=2012-12-31";
-				 	  getInvitedFriendsToPastEvent(beforeTodayMaybeApiUrl);
+				 	 //var beforeTodayMaybeApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=maybe&since=2012-12-31";
+				 	  //getInvitedFriendsToPastEvent(beforeTodayMaybeApiUrl);
 				 	  
 				 	  
 				 	  
@@ -686,7 +718,7 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 	}
 	else {
 		allEventFetchedCount++;
-		if (allEventFetchedCount == 2) {
+		if (allEventFetchedCount == 1) {
 			allEventFetched = true;
 			
 			$(".loading-bar-event").hide();  
@@ -710,9 +742,6 @@ function getInvitedFriendsToPastEvent (apiUrl) {
 function getFriendsInvitListFromAnEvent (fqlQuery) {
 	var invitedFriendsObject = [];
 
-	//on lance la requete
-	FB.api('fql', { q: fqlQuery },  function(response) {
-	
 		invitedEventsQueried++;
 		$(".eventAdd").empty(); 
 		$(".eventAdd").append(invitedEventsQueried);
@@ -723,6 +752,11 @@ function getFriendsInvitListFromAnEvent (fqlQuery) {
 			$( ".progress-eventAdd" ).addClass( "progress-bar-success" );
 		}
 		$(".eventAdd").show(); 
+
+	//on lance la requete
+	FB.api('fql', { q: fqlQuery },  function(response) {
+	
+
 		 
 		//on boucle pour chaque invite de la reponse
 		for (var i=0; i<response.data.length; i++) {
@@ -1460,58 +1494,15 @@ if ( !Date.prototype.toISOString ) {
 }
 
 
-//options du wait pour le partage Facebook
-var opts = {
-lines: 13, // The number of lines to draw
-length: 11, // The length of each line
-width: 5, // The line thickness
-radius: 17, // The radius of the inner circle
-corners: 1, // Corner roundness (0..1)
-rotate: 0, // The rotation offset
-color: '#FFF', // #rgb or #rrggbb
-speed: 1, // Rounds per second
-trail: 60, // Afterglow percentage
-shadow: false, // Whether to render a shadow
-hwaccel: false, // Whether to use hardware acceleration
-className: 'spinner', // The CSS class to assign to the spinner
-zIndex: 2e9, // The z-index (defaults to 2000000000)
-top: 'auto', // Top position relative to parent in px
-left: 'auto' // Left position relative to parent in px
-};
-
-
-var overlay;
-var target = document.createElement("div");
 
 
 /**********************************************************
 	on verifie si il peut publier
 ***********************************************************/
 function canPublishStream(){
-	//on regarde si on a les droits pour publier en son nom 
-	FB.api("/me/permissions", function(response) {
-
-		//si publish stream est présent est autorisé OK
-		if(response.data[0].publish_stream == 1) {
-		
-			if (photoHasBeenCreated == true) {
-				sharePicture();
-				//on affiche un loader
-				document.body.appendChild(target);
-				var spinner = new Spinner(opts).spin(target);
-				overlay = iosOverlay({
-						text: "Préparation de vos statistiques",
-						spinner: spinner
-						});	
-			}
-			else {
-				createPictureToShare(true);
-			}
-			
-		}
-		
-		else {
+	
 			Parse.FacebookUtils.logIn("publish_stream", {
+					
 					  success: function(user) {
 					  	if (photoHasBeenCreated == true) {
 					  	
@@ -1534,9 +1525,7 @@ function canPublishStream(){
 					    //console.log("\n !!!!! User cancelled the Facebook login or did not fully authorize. !!!!! \n");
 					  }
 			});
-		}
 
-	});
 } 
 
 
@@ -1862,26 +1851,26 @@ function saveSharePicture(creationPhotoManuelle)
 function sharePicture() 
 {
 		 var userLang = navigator.language || navigator.userLanguage; 
-		 var textToShare = "Here's my top party bro! Find yours : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids"
+		 var textToShare = "Here's my top party bro! Find yours : https://www.woovent.com/lookback #Woovent #FacebookEventsOnSteroids"
 		 if (userLang == "fr"){
 		 	//si c'est une fille
 		 	if (currentUser.attributes.gender == "female"){
-		 		var textToShare = topFriendMaleFirstName[0] + ", " + topFriendMaleFirstName[1] + " et " + topFriendMaleFirstName[2] + " sont mes meilleurs potes de soirées ! A vous de découvrir les votres ici : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
+		 		var textToShare = topFriendMaleFirstName[0] + ", " + topFriendMaleFirstName[1] + " et " + topFriendMaleFirstName[2] + " sont mes meilleurs potes de soirées ! A vous de découvrir les votres ici : https://www.woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
 		 	}
 		 	//si c'est un mec
 		 	else {
-		 		var textToShare = topFriendFemaleFirstName[0] + ", " + topFriendFemaleFirstName[1] + " et " + topFriendFemaleFirstName[2] + " sont mes meilleurs copines de soirées ! A vous de découvrir les votres ici : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
+		 		var textToShare = topFriendFemaleFirstName[0] + ", " + topFriendFemaleFirstName[1] + " et " + topFriendFemaleFirstName[2] + " sont mes meilleurs copines de soirées ! A vous de découvrir les votres ici : https://www.woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
 		 	}
 		 	
 		 	
 		 }else {
 			//si c'est une fille
 		 	if (currentUser.attributes.gender == "female"){
-		 		var textToShare = topFriendMaleFirstName[0] + ", " + topFriendMaleFirstName[1] + " and " + topFriendMaleFirstName[2] + " are my top party bros! Find yours here : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
+		 		var textToShare = topFriendMaleFirstName[0] + ", " + topFriendMaleFirstName[1] + " and " + topFriendMaleFirstName[2] + " are my top party bros! Find yours here : https://www.woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
 		 	}
 		 	//si c'est un mec
 		 	else {
-		 		var textToShare = topFriendFemaleFirstName[0] + ", " + topFriendFemaleFirstName[1] + " et " + topFriendFemaleFirstName[2] + " are my top party girls! Find yours here : https://woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
+		 		var textToShare = topFriendFemaleFirstName[0] + ", " + topFriendFemaleFirstName[1] + " et " + topFriendFemaleFirstName[2] + " are my top party girls! Find yours here : https://www.woovent.com/lookback #Woovent #FacebookEventsOnSteroids";
 		 	}
 		 }
 
@@ -1907,7 +1896,7 @@ function sharePicture()
 						text: "Partage effectué !"
 					});
 				
-					_gaq.push(['_trackEvent', 'Share', 'SharePicture', 'SharePictureOnFacebook']);
+					_gaq.push(['_trackEvent', 'Share', 'SharePictureStatsFacebook', 'SharePictureOnFacebook']);
 				
 		        
 		        //on tag les tops filles
@@ -2163,9 +2152,11 @@ function fbs_click() {
 		 }
 
     
-    var twtUrl = "";
+    var twtUrl = "http://www.woovent.com/lookback";
     var twtLink = 'http://twitter.com/share?text=' + encodeURIComponent(twtTitle + ' ' + twtUrl);
     window.open(twtLink);
+    
+    _gaq.push(['_trackEvent', 'Share', 'ShareOnTwitter', 'ShareOnTwitter']);
 }
 
 /**********************************************************
@@ -2176,8 +2167,10 @@ function fb_send_dialog( friendId) {
 	FB.ui({
 	    method: 'send',
 	    to: friendId ,
-	    link: 'https://woovent.com/lookback'
+	    link: 'https://www.woovent.com/lookback'
 	});
+	
+	_gaq.push(['_trackEvent', 'SendMessage', 'FacebookMessageSend', 'FacebookMessageSend']);
 
 }
 
