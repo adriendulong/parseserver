@@ -898,6 +898,10 @@ loader
 	. {
 		width: 300px;
 	}
+	
+	.uv-bottom-right , .zopim {
+		display : none !important;
+	}
 
 }
        
