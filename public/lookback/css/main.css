@@ -13,6 +13,12 @@ font-family: helvet_bold;
 src: url(../fonts/HelveticaNeueLTStd-Bd.otf);
 }
 
+@font-face
+{
+font-family: helvet_italic;
+src: url(../fonts/HelveticaNeueLTStd-It.otf);
+}
+
 
 .modal-backdrop {
 

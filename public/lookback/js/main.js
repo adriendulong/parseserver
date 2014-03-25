@@ -79,6 +79,10 @@ var allEventFetched = false;
 var allEventFetchedCount = 0;
 
 var answeredEventCountAllTime = 0;
+var maybeEventCountAllTime = 0;
+var declineEventCountAllTime = 0;
+var notAnsweredEventCountAllTime = 0;
+var attendingEventCountAllTime = 0;
 
 var windyVar;
 
@@ -151,7 +155,6 @@ function isUserConnected(){
 						
 						//si il avait pas de stats on update les infos du new user
 						else {
-							fblogin();
 							//console.log("has web stat PAS ok");		
 							$(".connection-div").fadeIn();
 							$(".btn-login-big	").show();
@@ -165,15 +168,14 @@ function isUserConnected(){
 						 $(".btn-logged-in").hide();
 						 $(".connection-div").fadeIn();
 						 $(".btn-login-big	").show();
-						 
-						 fblogin();
 						
 					
 					}
 				
 				},
 			  error: function(error) {
-					//console.log('\n  !!!!! Echec de la verification si User exist !!!!! \n ');   
+					//console.log('\n  !!!!! Echec de la verification si User exist !!!!! \n ');  
+					 $(".btn-login-big	").show();
 			  }
 			  
 		});	
@@ -186,7 +188,7 @@ function isUserConnected(){
 			$(".btn-logged-in").fadeOut();
 			$(".btn-login").fadeIn();
 			$(".connection-div").fadeIn();
-			$(".btn-login-big	").show();
+			$(".btn-login-big").show();
 			
 			
 			fblogin();
@@ -503,7 +505,7 @@ function getUserFriendList (userFriendApiUrl) {
 			document.body.appendChild(target);
 			var spinner = new Spinner(opts).spin(target);
 			overlay = iosOverlay({
-						text: "Recovering your stats",
+						text: wording_stats_popup_recover,
 						spinner: spinner
 					});	
 					
@@ -620,7 +622,7 @@ function friendListCreated(){
 	
 					
 				 	 //on lance la recup des invités aux events passés
-				 	 var beforeTodayAttendingApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=attending&since=2012-12-31";
+				 	 var beforeTodayAttendingApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=attending&since=2011-12-31";
 				 	 getInvitedFriendsToPastEvent(beforeTodayAttendingApiUrl);
 				 	 
 				 	 var beforeTodayMaybeApiUrl = "/me/events?fields=id,owner.fields(id,name,first_name,last_name,picture),name,venue,location,start_time,end_time,rsvp_status,cover,updated_time,description,is_date_only,admins.fields(id,name,first_name,last_name,picture)&limit=100&type=maybe&since=2012-12-31";
@@ -1031,6 +1033,20 @@ function saveUserBasicStats () {
 		newUserStat.set("createdEventCount",totalEventCreated);
 	}
 	
+	if (attendingEventCountAllTime){
+		newUserStat.set("attendingEventCount",attendingEventCountAllTime);
+	}
+	if (notAnsweredEventCountAllTime){
+		newUserStat.set("notRepliedEventCount",notAnsweredEventCountAllTime);
+	}
+	if (declineEventCountAllTime){
+		newUserStat.set("declinedEventCount",declineEventCountAllTime);
+	}
+	if (maybeEventCountAllTime){
+		newUserStat.set("maybeEventCount",maybeEventCountAllTime);
+	}
+	
+	
 	//on save les nouvelles stats
 	newUserStat.save(null, {
 		  success: function(userStats) {
@@ -1121,12 +1137,26 @@ function saveUserBasicStats () {
 
 function getUserTotalNumberOfInvit (apiUrl, rsvpStatus) {
 
+
+
 	//on va recup le nombre total d'invitation à des evenements
 	FB.api(apiUrl, function(response) {
 		totalInvitRecieve+=response.data.length;
 		
 		if (rsvpStatus == "attending" || rsvpStatus == "maybe") {
 			answeredEventCountAllTime+=response.data.length;
+		}
+		if (rsvpStatus == "not_replied" ) {
+			notAnsweredEventCountAllTime +=response.data.length;
+		}
+		if (rsvpStatus == "maybe" ) {
+			maybeEventCountAllTime +=response.data.length;
+		}
+		if (rsvpStatus == "declined" ) {
+			declineEventCountAllTime +=response.data.length;
+		}	
+		if (rsvpStatus == "attending") {
+			attendingEventCountAllTime +=response.data.length;
 		}
 		
 		//si il y a une pagination on relance une recherche sur lapi
@@ -1495,7 +1525,7 @@ function canPublishStream(){
 						document.body.appendChild(target);
 						var spinner = new Spinner(opts).spin(target);
 						overlay = iosOverlay({
-								text: "Préparation de vos statistiques",
+								text: wording_stats_popup_prepare,
 								spinner: spinner
 								});	
 								
@@ -1526,7 +1556,7 @@ function createPictureToShare(creationPhotoManuelle) {
 		document.body.appendChild(target);
 		var spinner = new Spinner(opts).spin(target);
 		overlay = iosOverlay({
-				text: "Préparation de vos statistiques",
+				text: wording_stats_popup_prepare,
 				spinner: spinner
 				});		
 
@@ -1582,8 +1612,8 @@ function printUserPhotoOnCanva(friendsPosition , creationPhotoManuelle) {
 			var x_image_position_Male = 53;
 			var x_image_position_Female = 422;
 			
-			var y_image_position_Female = 736;
-			var y_image_position_Male = 736;
+			var y_image_position_Female = 785;
+			var y_image_position_Male = 785;
 			
 			var image_position_size =84;
 			
@@ -1594,8 +1624,8 @@ function printUserPhotoOnCanva(friendsPosition , creationPhotoManuelle) {
 			var x_image_position_Male = 245;
 			var x_image_position_Female = 614;
 			
-			var y_image_position_Female = 736;
-			var y_image_position_Male = 736;
+			var y_image_position_Female = 785;
+			var y_image_position_Male = 785;
 			
 			var image_position_size =84;
 			
@@ -1677,7 +1707,7 @@ function saveSharePicture(creationPhotoManuelle)
 {
 	if (creationPhotoManuelle == true) {
 		overlay.update({
-					text: "Création de votre image"
+					text: wording_stats_popup_create
 					});	
 	}	
 
@@ -1715,6 +1745,11 @@ function saveSharePicture(creationPhotoManuelle)
 	ctx.font = "38px helvet_normal";
 	ctx.fillText(text,565,310);
 	
+	ctx.shadowOffsetX = 2;
+	ctx.shadowOffsetY = 2;
+	ctx.shadowBlur = 5;
+	ctx.shadowColor = 'black';
+	
 	//Top 1 male & female name
 	var textMale1 = topFriendMaleName[0];
 	var textFemale1 = topFriendFemaleName[0];
@@ -1722,52 +1757,75 @@ function saveSharePicture(creationPhotoManuelle)
 	ctx.fillText(textMale1,200,660);
 	ctx.fillText(textFemale1,570,660);
 	
+	//Top 1 male & female pseudo
+	var textMale1 = wording_topMale_1_title;
+	var textFemale1 = wording_topFemale_1_title;
+	ctx.font = "20px helvet_italic";
+	ctx.fillText(textMale1,200,690);
+	ctx.fillText(textFemale1,570,690);
+	
 	//Top 1 male & female count
 	var textMale1 = top3BroParseObject[0].get("eventTogetherCount");
 	var textFemale1 = top3GirlsParseObject[0].get("eventTogetherCount");
 	ctx.font = "24px helvet_normal";
-	ctx.fillText(textMale1,130,690);
-	ctx.fillText(textFemale1,500,690);
+	ctx.fillText(textMale1,130,720);
+	ctx.fillText(textFemale1,500,720);
+	
+	//Top 2 & 3 male quote
+	var textMale2 = wording_topMale_2_title;
+	var textMale3 = wording_topMale_3_title;
+	ctx.font = "19px helvet_italic";
+	ctx.fillText(textMale2,95,935);
+	ctx.fillText(textMale3,285,935);
+	
+	//Top 2 & 3 female quote
+	var textFemale2 = wording_topFemale_2_title;
+	var textFemale3 = wording_topFemale_3_title;
+	ctx.font = "19px helvet_italic";
+	ctx.fillText(textFemale2,470,935);
+	ctx.fillText(textFemale3,655,935);
 	
 	var textEventCount = "Events together";
 	ctx.font = "18px helvet_normal";
-	ctx.fillText(textEventCount,213,690);
-	ctx.fillText(textEventCount,583,690);
+	ctx.fillText(textEventCount,213,720);
+	ctx.fillText(textEventCount,583,720);
 	
 	//Top 2 & 3 male name
 	var textMale2 = topFriendMaleFirstName[1] + " " + topFriendMaleLastName[1].charAt(0) + ".";
 	var textMale3 = topFriendMaleFirstName[2] + " " + topFriendMaleLastName[2].charAt(0) + ".";
 	ctx.font = "24px helvet_bold";
-	ctx.fillText(textMale2,95,860);
-	ctx.fillText(textMale3,285,860);
+	ctx.fillText(textMale2,95,910);
+	ctx.fillText(textMale3,285,910);
 	
 	//Top 2 & 3 male count
 	var textMale2 = top3BroParseObject[1].get("eventTogetherCount");
 	var textMale3 = top3BroParseObject[2].get("eventTogetherCount");
 	ctx.font = "24px helvet_normal";
-	ctx.fillText(textMale2,65,885);
-	ctx.fillText(textMale3,255,885);
+	ctx.fillText(textMale2,65,960);
+	ctx.fillText(textMale3,255,960);
 	
 	//Top 2 & 3 femmale name
 	var textFemale2 = topFriendFemaleFirstName[1] + " " + topFriendFemaleLastName[1].charAt(0) + ".";
 	var textFemale3 = topFriendFemaleFirstName[2] + " " + topFriendFemaleLastName[2].charAt(0) + ".";
 	ctx.font = "24px helvet_bold";
-	ctx.fillText(textFemale2,470,860);
-	ctx.fillText(textFemale3,655,860);
+	ctx.fillText(textFemale2,470,910);
+	ctx.fillText(textFemale3,655,910);
 	
 	//Top 2 & 3 female  count
 	var textFemale2 = top3GirlsParseObject[1].get("eventTogetherCount");
 	var textFemale3 = top3GirlsParseObject[2].get("eventTogetherCount");
 	ctx.font = "24px helvet_normal";
-	ctx.fillText(textFemale2,435,885);
-	ctx.fillText(textFemale3,620,885);
+	ctx.fillText(textFemale2,435,960);
+	ctx.fillText(textFemale3,620,960);
 	
 	var textEventCount = "Events";
 	ctx.font = "18px helvet_normal";
-	ctx.fillText(textEventCount,110,885);
-	ctx.fillText(textEventCount,300,885);
-	ctx.fillText(textEventCount,480,885);
-	ctx.fillText(textEventCount,668,885);
+	ctx.fillText(textEventCount,110,960);
+	ctx.fillText(textEventCount,300,960);
+	ctx.fillText(textEventCount,480,960);
+	ctx.fillText(textEventCount,668,960);
+	
+	
 
 	var canvasInfos = document.getElementById('canvaPhotoToShare');
 	var dataURL = canvasInfos.toDataURL("image/png")
@@ -1799,7 +1857,7 @@ function saveSharePicture(creationPhotoManuelle)
 						
 						if (creationPhotoManuelle == true) {
 							overlay.update({
-										text: "Enregistrement de votre image"
+										text: wording_stats_popup_save
 										});	
 						}
 						
@@ -1833,8 +1891,8 @@ function saveSharePicture(creationPhotoManuelle)
 	 post picture into user wall
 ***********************************************************/
 
-function sharePicture() 
-{
+function sharePicture() {
+
 		 var userLang = navigator.language || navigator.userLanguage; 
 		 var textToShare = "Here's my top party bro! Find yours : https://www.woovent.com/lookback #Woovent #FacebookEventsOnSteroids"
 		 if (userLang == "fr"){
@@ -1878,7 +1936,7 @@ function sharePicture()
 		        	
 				  	overlay.update({
 						icon: "img/check.png",
-						text: "Partage effectué !"
+						text: wording_stats_popup_done
 					});
 				
 					_gaq.push(['_trackEvent', 'Share', 'SharePictureStatsFacebook', 'SharePictureOnFacebook']);
@@ -2152,7 +2210,7 @@ function fb_send_dialog( friendId) {
 	FB.ui({
 	    method: 'send',
 	    to: friendId ,
-	    link: 'https://www.woovent.com/lookback'
+	    link: 'https://www.woovent.com/lookback/'
 	});
 	
 	_gaq.push(['_trackEvent', 'SendMessage', 'FacebookMessageSend', 'FacebookMessageSend']);
@@ -2244,3 +2302,5 @@ function findUserStatsPosition() {
 			  }
 			});
 }
+
+

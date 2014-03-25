@@ -44,11 +44,11 @@ var wording_stats_userPosition_text2 = "of the biggest<br />Facebook events user
 var wording_topMale_title1 = "My Top ";
 var wording_topMale_title2 = "Guys!";
 var wording_topMale_subtitle1 = "The 3 guys you spent most of your events with in 2013! ";
-var wording_topMale_1_title = "Your events bros :";
+var wording_topMale_1_title = "My events bros";
 var wording_topMale_1_quote = "The first shot is always for him!";
-var wording_topMale_2_title = "Your Wing-man :";
+var wording_topMale_2_title = "My Wing-man";
 var wording_topMale_2_quote = "\"Hey have you met ";
-var wording_topMale_3_title = "The substitute :";
+var wording_topMale_3_title = "The substitute";
 var wording_topMale_3_quote = "Always here if something goes wrong";
 var wording_topMale_eventTogether = "events together";
 
@@ -67,9 +67,9 @@ var wording_topFemale_title2 = "Girls! ";
 var wording_topFemale_subtitle1 = "The 3 girls you spent most of your events with in 2013! ";
 var wording_topFemale_1_title = "THE best !";
 var wording_topFemale_1_quote = "\"Do you want to stay home?\"";
-var wording_topFemale_2_title = "The coolest : ";
+var wording_topFemale_2_title = "The coolest";
 var wording_topFemale_2_quote = "Always ready ";
-var wording_topFemale_3_title = "Bronze medal :";
+var wording_topFemale_3_title = "Bronze medal";
 var wording_topFemale_3_quote = "\"It's my sooooonnnnnggg!\"";
 var wording_topFemale_eventTogether = "events together";
 
@@ -86,7 +86,12 @@ var wording_modal_download_title = "Well done!";
 var wording_modal_download_text1 = "Interesting these stats about your Facebook events no?! <br />Go even further with the first app dedicated to your Facebook Events!<br /> And you know what?! <strong>It's FREE!</strong>";
 var wording_modal_download_text2 = "Welcome on board ";
 
-
+//stats pop up
+var wording_stats_popup_prepare = "Generation of your stats";
+var wording_stats_popup_create = "Generation of the Picture";
+var wording_stats_popup_save = "Saving your Picture";
+var wording_stats_popup_done = "Share Done !"
+var wording_stats_popup_recover = "Recovering your stats";
 
 
 

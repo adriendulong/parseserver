@@ -44,11 +44,11 @@ var wording_stats_userPosition_text2 = "plus gros utilisateurs <br />d'évèneme
 var wording_topMale_title1 = "Ton Top ";
 var wording_topMale_title2 = "Mecs !";
 var wording_topMale_subtitle1 = "Voici les 3 garçons avec qui tu as passé le plus de soirées en 2013 ! ";
-var wording_topMale_1_title = "Ton frère de soirée :";
+var wording_topMale_1_title = "Mon frère de soirée";
 var wording_topMale_1_quote = "Le premier verre est toujours pour lui !";
-var wording_topMale_2_title = "Ton co-pilote :";
+var wording_topMale_2_title = "Mon co-pilote";
 var wording_topMale_2_quote = "\"Salut, tu connais ";
-var wording_topMale_3_title = "Le remplacant :";
+var wording_topMale_3_title = "Le remplacant";
 var wording_topMale_3_quote = "Toujours là en cas de panne";
 var wording_topMale_eventTogether = "soirées ensemble";
 
@@ -65,11 +65,11 @@ var wording_topMale_shareToSee_buttonLike = "Like Woovent :)";
 var wording_topFemale_title1 = "Ton Top ";
 var wording_topFemale_title2 = "Filles ! ";
 var wording_topFemale_subtitle1 = "Voici les 3 filles avec lesquelles tu as passé le plus de soirées ! ";
-var wording_topFemale_1_title = "LA meilleure !";
+var wording_topFemale_1_title = "LA meilleure";
 var wording_topFemale_1_quote = "\"Tu veux rester dormir à la maison ?\"";
-var wording_topFemale_2_title = "Copine-coquine :";
+var wording_topFemale_2_title = "Copine-coquine";
 var wording_topFemale_2_quote = "Toujours prête ";
-var wording_topFemale_3_title = "Medaille de bronze :";
+var wording_topFemale_3_title = "Medaille de bronze";
 var wording_topFemale_3_quote = "\"C'est ma chansooooon !\"";
 var wording_topFemale_eventTogether = "soirées ensemble";
 
@@ -85,6 +85,14 @@ var wording_topFemale_shareToSee_buttonLike = "Like Woovent :)";
 var wording_modal_download_title = "Félicitations !";
 var wording_modal_download_text1 = "Vous avez aimez générer vos statistiques ?!<br />Vous adorerez Woovent : la première application dédiée à vos événements Facebook !<br /> Et en plus <strong>c'est gratuit !</strong>";
 var wording_modal_download_text2 = "Bienvenue à bord ";
+
+
+//stats pop up
+var wording_stats_popup_prepare = "Préparation de vos statistiques";
+var wording_stats_popup_create = "Création de votre image";
+var wording_stats_popup_save = "Enregistrement de votre image";
+var wording_stats_popup_done = "Partage effectué !"
+var wording_stats_popup_recover = "Réinitialisation de vos stats";
 
 
 
