@@ -98,17 +98,22 @@
 		
 		Parse.initialize("8UT7kL1fmD9Orti3P7obNJyTgSpJpEGvz4HkCrr8", "PvIWJ0YU4q2XYr0DjhQiGDLBeTyhusQ5xpCwQNuq");
 		
-		
-		  window.fbAsyncInit = function() {
-			  Parse.FacebookUtils.init({
-			    appId      : '493616390746321', // App ID
-			    channelUrl : '//www.woovent.com//channel.html', // Channel File
-				status     : true, // check login status
-				cookie     : true, // enable cookies to allow Parse to access the session
-				xfbml      : true  // parse XFBML
-	        });
-			  isUserConnected();  
-	      };
+		try{
+			window.fbAsyncInit = function() {
+				  Parse.FacebookUtils.init({
+				    appId      : '493616390746321', // App ID
+				    channelUrl : '//www.woovent.com//channel.html', // Channel File
+					status     : true, // check login status
+					cookie     : true, // enable cookies to allow Parse to access the session
+					xfbml      : true  // parse XFBML
+		        });
+				  isUserConnected();  
+		      };
+		      
+		}catch(e){
+			isUserConnected();
+		}
+		  
 	      
 	      (function(d, debug){
 	         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
@@ -205,6 +210,7 @@
 		<a onclick="fblogin()" style="display : none;" class="btn-login-big" href="#"  >
 			<img class="woovent_login_facebook" src="img/fblogin.png" alt="Facebook login easy with Woovent" width="250px" style="" /> 
 		</a>
+		<p style="font-size :13px;"> Can't find / clic the login button ? <a href="https://apps.facebook.com/woovent/lookback" onclick="_gaq.push(['_trackEvent', 'buttonLoginNotSee', 'buttonLoginNotSee', 'PrintLoginButton']);">clic here</a></p>
 	
 	</div>  
 <!----------------------------------------------------------------------------

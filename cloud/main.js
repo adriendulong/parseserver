@@ -1,4 +1,7 @@
 require('cloud/app.js');
+
+
+
 ////////////
 // PUSH NEW PHOTOS EVENT
 ////////////

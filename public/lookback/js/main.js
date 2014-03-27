@@ -119,6 +119,7 @@ left: 'auto' // Left position relative to parent in px
 var overlay;
 var target = document.createElement("div");
 
+
 /*************************************
    vérification user logué ou non
 *************************************/
@@ -128,6 +129,7 @@ function isUserConnected(){
 		
 		//check si le user a deja accepté l'appli Woovent
 		if (response.status === 'connected') {
+		
 			
 			//console.log("\n ***** User already connected to Facebook! ***** \n");
 			
