@@ -313,6 +313,9 @@ Parse.FacebookUtils.logIn("email,user_events,user_birthday,user_location,user_li
 	  	//si le user nexistait pas on le crée
 	    if (!user.existed()) {
 	      //console.log("\n ***** User signed up and logged in through Facebook! ***** \n");
+	      
+	      isNewUser = true;
+	      
 	      createUserAccount(user);
 	      
 	      mixpanel.track(

@@ -814,14 +814,14 @@ function saveThePicture(photoToAddArray) {
 								//on essaye de poster un message sur Facebook
 								checkPublishPermission();
 								
-								Parse.Cloud.run('pushnewphotos', { nbphotos: , eventid:  }, {
+								/*
+								Parse.Cloud.run('pushnewphotos', { nbphotos: photoAdded , eventid: eventParseObjectVar.id  }, {
 								  success: function(responseMail) {
-								    // ratings should be 4.5
-								    console.log("email sent");
+								  
 								  },
 								  error: function(error) {
 								  }
-								});
+								});*/
 								
 								
 							}

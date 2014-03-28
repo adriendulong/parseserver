@@ -119,7 +119,7 @@ Parse.Cloud.define("sendMailNewUsersLookback", function(request, response) {
 		    
 	    }else {
 	    
-		    var mailContent = "Hi " + userFirstName + ",\n\nI’m Remi Bardoux, co-founder of Woovent.\nI hope you appreciated your Facebook events stats!\n\nNow if you want to continue to get the best from your Facebook events you can download the Woovent app on your phone simply by clicking on this link :\nhttps://itunes.apple.com/fr/app/woovent/id781588768\n\nWoovent is the first app dedicated to your Facebook events :\n- Say STOP to SPAM invitations easily managing  your invitations\n- Get access to all your upcoming events in one single app\n- Automatically find all the photos that have been taken to a past events\n\nIt would make me really happy to have some feedbacks from you, so don’t hesitate and send me an email to remi@woovent.com\n\nRemi B.\nCOO @wooventapp";
+		    var mailContent = "Hi " + userFirstName + ",\n\nI’m Remi Bardoux, co-founder of Woovent.\nI hope you appreciated your Facebook events stats!\n\nNow if you want to continue to get the best from your Facebook events you can download the Woovent app on your phone simply by clicking on this link :\nhttps://itunes.apple.com/us/app/woovent/id781588768\n\nWoovent is the first app dedicated to your Facebook events :\n- Say STOP to SPAM invitations easily managing  your invitations\n- Get access to all your upcoming events in one single app\n- Automatically find all the photos that have been taken to a past events\n\nIt would make me really happy to have some feedbacks from you, so don’t hesitate and send me an email to remi@woovent.com\n\nRemi B.\nCOO @wooventapp";
 
 		    var subjectContent = "Facebook Event App now available for iPhone!";
 	    }
@@ -141,15 +141,15 @@ Parse.Cloud.define("sendMailNewUsersLookback", function(request, response) {
 			    from_name: "Remi B.",
 			    to: [
 			      {
-			        email: request.params.email,
+			        email: request.params.userMail,
 			        name: userName
 			      }
 			    ]
 			  },
-			  "async": true,
-			  "track_clicks" : true,
-			  "track_opens" : true,
-			  "tags": ["newUserLookback"]
+			  async: true,
+			  track_clicks : true,
+			  track_opens : true,
+			  tags: ["newUserLookback"]
 			},{
 			  success: function(httpResponse) {
 			    console.log(httpResponse);

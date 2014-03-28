@@ -66,9 +66,56 @@ function getStats (numberToBegin) {
 			 //console.log(" \n !!!!! !!!!! \n" );
 			 }
 		}); 
+		
 	 
 }
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+
+function sendPushNotif () {
+
+ 	 var User = Parse.Object.extend("User");
+	 var queryCheckInUser = new Parse.Query(User);
+	 
+	 queryCheckInUser.limit(10);
+	 queryCheckInUser.doesNotExist("hasWebStatistics");
+	 
+	 queryCheckInUser.find({
+		 success: function(results) {
+		 	console.log(results);
+			 for (var i = 0; i < results.length; i++) { 
+			      	
+			      	FB.api(
+					    "/"+ results[i].attributes.facebookId +"/notifications",
+					    "POST",
+					    {
+					    	"access_token" : "493616390746321|JyEPLPbbwdOY60uNdRlM4ROJAvE",
+							"template" : "Find your Top 3 best party girls with Facebook Event Lookback!",
+					    	"href" : "lookback/",
+					    	"ref" : "lookbackPushTest"
+					    },
+					    function (response) {
+					    
+					    	 if (response && !response.error) {
+					    	 
+					    	 console.log("ok");
+					    	 }
+
+						}
+					);
+					
+					console.log(results[i].attributes.name);
+			      
+			    }
+		 
+		 },
+		 error: function() {
+			 //console.log(" \n !!!!! !!!!! \n" );
+			 }
+		}); 
+	
+	
 }
