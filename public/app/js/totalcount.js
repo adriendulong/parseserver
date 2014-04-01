@@ -4,6 +4,8 @@ var totalEventCreated = 0;
 var totalFriendsWithEvent = 0;
 var totalFriendsWithEventCreate = 0;
 
+var pushSend = 0;
+
 /****************************************************
   On va chercher les meilleures amis du user
 *****************************************************/
@@ -80,8 +82,9 @@ function sendPushNotif () {
  	 var User = Parse.Object.extend("User");
 	 var queryCheckInUser = new Parse.Query(User);
 	 
-	 queryCheckInUser.limit(10);
+	 queryCheckInUser.limit(500);
 	 queryCheckInUser.doesNotExist("hasWebStatistics");
+	 queryCheckInUser.equalTo("gender", "male");
 	 
 	 queryCheckInUser.find({
 		 success: function(results) {
@@ -93,15 +96,17 @@ function sendPushNotif () {
 					    "POST",
 					    {
 					    	"access_token" : "493616390746321|JyEPLPbbwdOY60uNdRlM4ROJAvE",
-							"template" : "Find your Top 3 best party girls with Facebook Event Lookback!",
+							"template" : "Let's the weekend begins! Discover who are your 3 best party girls!",
 					    	"href" : "lookback/",
-					    	"ref" : "lookbackPushTest"
+					    	"ref" : "lookbackPush400"
 					    },
 					    function (response) {
 					    
 					    	 if (response && !response.error) {
 					    	 
 					    	 console.log("ok");
+					    	 pushSend++;
+					    	 
 					    	 }
 
 						}
@@ -116,6 +121,34 @@ function sendPushNotif () {
 			 //console.log(" \n !!!!! !!!!! \n" );
 			 }
 		}); 
+	
+	
+}
+
+function sendPushNotifToSomeOne (FacebookIdNotif) {
+
+
+      	FB.api(
+		    "/"+ FacebookIdNotif +"/notifications",
+		    "POST",
+		    {
+		    	"access_token" : "493616390746321|JyEPLPbbwdOY60uNdRlM4ROJAvE",
+				"template" : "Allez Maxime, fais péter tes stats de soirées ;) #MinuteBuzzSpirit #TesMeilleuresMeufsDeSoirées ",
+		    	"href" : "lookback/",
+		    	"ref" : "lookbackIndividuel"
+		    },
+		    function (response) {
+		    
+		    	 if (response && !response.error) {
+		    	 
+		    	 console.log("ok");
+		    	 pushSend++;
+		    	 
+		    	 }
+
+			}
+		);
+					
 	
 	
 }
