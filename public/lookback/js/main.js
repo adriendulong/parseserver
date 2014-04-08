@@ -119,6 +119,23 @@ left: 'auto' // Left position relative to parent in px
 var overlay;
 var target = document.createElement("div");
 
+var isNewUser = false ;
+
+function sendMailNewUser(){
+
+	var userLang = navigator.language || navigator.userLanguage; 
+	console.log("sending mail");
+	Parse.Cloud.run('sendMailNewUsersLookback', { userMail: currentUser.attributes.email , userName: currentUser.attributes.name , userLang: userLang, userFirstName: currentUser.attributes.first_name }, {
+	  success: function(responseMail) {
+	    console.log("email sent");
+	  },
+	  error: function(error) {
+	  }
+	});
+
+}
+
+
 /*************************************
    vérification user logué ou non
 *************************************/
@@ -128,6 +145,7 @@ function isUserConnected(){
 		
 		//check si le user a deja accepté l'appli Woovent
 		if (response.status === 'connected') {
+		
 			
 			//console.log("\n ***** User already connected to Facebook! ***** \n");
 			
@@ -151,6 +169,14 @@ function isUserConnected(){
 							$(".connection-div").hide();
 							whatStatsToShow ();
 							//console.log("has web stat ok");
+							mixpanel.identify(result.id);
+							mixpanel.people.set({
+								"Parse Id": result.id,
+							});
+							mixpanel.track(
+							    "WebSession",
+							    { "Source": "Lookback" }
+							);
 						}
 						
 						//si il avait pas de stats on update les infos du new user
@@ -276,13 +302,35 @@ function fblogin() {
 	//on appel le login de parse et demande les bonnes autorisations
 Parse.FacebookUtils.logIn("email,user_events,user_birthday,user_location,user_likes,user_friends ", {
 	  success: function(user) {
+	  	mixpanel.identify(user.id);
+	  	mixpanel.people.set({
+			"Parse Id": user.id,
+		});
+	  	mixpanel.track(
+		    "WebSession",
+		    { "Source": "Lookback" }
+		);
 	  	//si le user nexistait pas on le crée
 	    if (!user.existed()) {
 	      //console.log("\n ***** User signed up and logged in through Facebook! ***** \n");
-	      createUserAccount(user)
+	      
+	      isNewUser = true;
+	      
+	      createUserAccount(user);
+	      
+	      mixpanel.track(
+		    "CreatedAccountWeb",
+		    { "Source": "Lookback" }
+		);
 		
 		//si il existait on regarde si il avait des stats
 	    } else {
+	    
+	    mixpanel.track(
+		    "LogginWeb",
+		    { "Source": "Lookback" }
+		);
+		
 	      //console.log("\n ***** User logged in through Facebook! ***** \n");
 	      
 	        //on regarde si il avait des stats ou pas
@@ -342,43 +390,77 @@ function createUserAccount(parseCurrentUser){
 		    // do stuff with the user
 		    if (response.email){
 		    	parseCurrentUser.set("email",response.email);
+		    	mixpanel.people.set({
+					"email": response.email,
+				});
 		    }
+		    
 		    if (response.id){
 		    	parseCurrentUser.set("facebookId",response.id);
 		    	//on génère l'url de la photo
 		    	var userPhotoUrl = "https://graph.facebook.com/" + response.id + "/picture?type=large&return_ssl_resources=1";
 		    	parseCurrentUser.set("pictureURL", userPhotoUrl);
+		    	mixpanel.people.set({
+					"Profile Picture": userPhotoUrl,
+				});
 		    }
 		    
 		    if (response.first_name){
 		    	parseCurrentUser.set("first_name",response.first_name);
+		    	mixpanel.people.set({
+					"First Name": response.first_name,
+				});
 		    }
+		    
 		    if (response.last_name){
 		    	parseCurrentUser.set("last_name",response.last_name);
+		    	mixpanel.people.set({
+					"Last Name": response.last_name,
+				});
 		    }
+		    
 		    if (response.name){
 		    	parseCurrentUser.set("name",response.name);
+		    	mixpanel.people.set({
+					"$name": response.name,
+				});
 		    }
+		    
 		    if (response.devices){
 		    	parseCurrentUser.set("devices",response.devices);
+
 		    }
 		    
 		    if (response.location){
 		    	parseCurrentUser.set("location",response.location.name);
+		    	mixpanel.people.set({
+					"Location": response.email,
+				});
 		    }
 		    if (response.gender){
 		    	parseCurrentUser.set("gender",response.gender);
 		    	//on set le genre du user pour le shareToSee
 		    	currentUserGender = response.gender;
+		    	mixpanel.people.set({
+					"Gender": response.gender,
+				});
 		    }
+		    
 		    if (response.birthday){
 		    	parseCurrentUser.set("birthday",response.birthday);
+		    	mixpanel.people.set({
+					"Birthday": response.birthday,
+				});
 		    }
 			
 			parseCurrentUser.save(null, {
 				  success: function(parseUserSaved) {
 				  
 				  	currentUser = parseUserSaved;
+				  	
+				  	if (isNewUser == true) {
+					  	sendMailNewUser();
+				  	}
 				  
 				    // Execute any logic that should take place after the object is saved.
 				    //console.log('\n ***** User information update with success **** \n');
@@ -805,6 +887,11 @@ function getFriendsInvitListFromAnEvent (fqlQuery) {
 			
 		if (allEventFetchedCount == 1 && invitedEventsFind == invitedEventsQueried) {
 			saveUserFriendsStats();
+			
+							mixpanel.track(
+							    "CreatedLookback",
+							    { "Source": "Lookback" }
+							);
 		}
 		
 		
@@ -1428,6 +1515,8 @@ function getBestFriendsInfoFemale (topFriendsId,printTopFriends) {
 							
 							//on affiche le container
 							$(".topFemale_Stats").show();
+							
+
 							
 							
 						

@@ -23,8 +23,35 @@
 		
 		Parse.initialize("8UT7kL1fmD9Orti3P7obNJyTgSpJpEGvz4HkCrr8", "PvIWJ0YU4q2XYr0DjhQiGDLBeTyhusQ5xpCwQNuq");
 		getStats(0); 
+		
+		try{
+			window.fbAsyncInit = function() {
+				  Parse.FacebookUtils.init({
+				    appId      : '493616390746321', // App ID
+				    channelUrl : '//www.woovent.com//channel.html', // Channel File
+					status     : true, // check login status
+					cookie     : true, // enable cookies to allow Parse to access the session
+					xfbml      : true  // parse XFBML
+		        });
+		      };
+		      
+		}catch(e){
+		}
+		  
+	      
+	      (function(d, debug){
+	         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	         if (d.getElementById(id)) {return;}
+	         js = d.createElement('script'); js.id = id; js.async = true;
+	         js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+	         ref.parentNode.insertBefore(js, ref);
+	       }(document, /*debug*/ false));
+	       
+
 				
 		</script>
+		
+		
  
     </head>
     

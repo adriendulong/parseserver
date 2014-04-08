@@ -38,6 +38,15 @@ function isUserConnected(){
 					if(result){	
 						currentUser = result ;	
 						initJS();
+							mixpanel.identify(result.id);
+							mixpanel.people.set({
+								"Parse Id": result.id,
+							});
+							mixpanel.track(
+							    "WebSession",
+							    { "Source": "EventView" }
+							);
+						
 					}	
 					//si il n'y a pas de resultat (user deja accepté l'appli mais plus de compte
 					else{
@@ -78,18 +87,36 @@ function isUserConnected(){
 *************************************/
 function fblogin() {
 //on appel le login de parse et demande les bonnes autorisations
-Parse.FacebookUtils.logIn("", {
+Parse.FacebookUtils.logIn("email,user_events,user_birthday,user_location,user_likes,user_friends", {
 	  success: function(user) {
+	  
+	  	mixpanel.identify(user.id);
+	  	mixpanel.people.set({
+			"Parse Id": user.id,
+		});
+	  	mixpanel.track(
+		    "WebSession",
+		    { "Source": "EventView" }
+		);
 	  
 	  	//si le user nexistait pas on le crée
 	    if (!user.existed()) {
 	      console.log("\n ***** User signed up and logged in through Facebook! ***** \n");
 	      
-	      createUserAccount(user)
+	      createUserAccount(user);
+	      mixpanel.track(
+		    "CreatedAccountWeb",
+		    { "Source": "Lookback" }
+		  );
 		
 	    } else {
 	      console.log("\n ***** User logged in through Facebook! ***** \n");
 	      currentUser = user ;
+	      
+	      mixpanel.track(
+		    "LogginWeb",
+		    { "Source": "Lookback" }
+		  );
 
 	    }
 	    //on masque la pop up de login à Facebook
@@ -136,35 +163,69 @@ function createUserAccount(parseCurrentUser){
 		    // do stuff with the user
 		    if (response.email){
 		    	parseCurrentUser.set("email",response.email);
+		    	mixpanel.people.set({
+					"email": response.email,
+				});
 		    }
+		    
 		    if (response.id){
 		    	parseCurrentUser.set("facebookId",response.id);
 		    	//on génère l'url de la photo
 		    	var userPhotoUrl = "https://graph.facebook.com/" + response.id + "/picture?type=large&return_ssl_resources=1";
 		    	parseCurrentUser.set("pictureURL", userPhotoUrl);
+		    	mixpanel.people.set({
+					"Profile Picture": userPhotoUrl,
+				});
 		    }
 		    
 		    if (response.first_name){
 		    	parseCurrentUser.set("first_name",response.first_name);
+		    	mixpanel.people.set({
+					"First Name": response.first_name,
+				});
 		    }
+		    
 		    if (response.last_name){
 		    	parseCurrentUser.set("last_name",response.last_name);
+		    	mixpanel.people.set({
+					"Last Name": response.last_name,
+				});
 		    }
+		    
 		    if (response.name){
 		    	parseCurrentUser.set("name",response.name);
+		    	mixpanel.people.set({
+					"$name": response.name,
+				});
 		    }
+		    
+		    if (response.devices){
+		    	parseCurrentUser.set("devices",response.devices);
+
+		    }
+		    
 		    if (response.location){
 		    	parseCurrentUser.set("location",response.location.name);
+		    	mixpanel.people.set({
+					"Location": response.email,
+				});
 		    }
 		    if (response.gender){
 		    	parseCurrentUser.set("gender",response.gender);
 		    	//on set le genre du user pour le shareToSee
 		    	currentUserGender = response.gender;
+		    	mixpanel.people.set({
+					"Gender": response.gender,
+				});
 		    }
+		    
 		    if (response.birthday){
 		    	parseCurrentUser.set("birthday",response.birthday);
+		    	mixpanel.people.set({
+					"Birthday": response.birthday,
+				});
 		    }
-			
+		    			
 			parseCurrentUser.save(null, {
 				  success: function(parseUserSaved) {
 				  
@@ -734,7 +795,10 @@ function saveThePicture(photoToAddArray) {
 				  			photoAdded++;
 				  			photoAddedObject = parsePhotoObjectSaved;
 				
-
+							mixpanel.track(
+									    "AddAPicture",
+									    { "Source": "EventView" }
+							);
 				
 							//si on a ajouté toutes les photos
 							if (photoAdded == photoToAdd){
@@ -749,6 +813,15 @@ function saveThePicture(photoToAddArray) {
 								
 								//on essaye de poster un message sur Facebook
 								checkPublishPermission();
+								
+								/*
+								Parse.Cloud.run('pushnewphotos', { nbphotos: photoAdded , eventid: eventParseObjectVar.id  }, {
+								  success: function(responseMail) {
+								  
+								  },
+								  error: function(error) {
+								  }
+								});*/
 								
 								
 							}
@@ -945,6 +1018,11 @@ function numberOflikeThePicture(imgParseObject, numberOfLike) {
  	$(photoLikeSpanClass).empty();
  	
  	$(photoLikeSpanClass).append('&nbsp; '+ numberOfLike );
+ 	
+ 	mixpanel.track(
+		"LikeAPicture",
+		{ "Source": "EventView" }
+	);
 
 }
 
@@ -959,6 +1037,11 @@ function numberOfCommentThePicture(imgParseObject, numberOfComment) {
  	$(photoChatSpanClass).empty();
  	
  	$(photoChatSpanClass).append('&nbsp; '+ numberOfComment );
+ 	
+ 	mixpanel.track(
+		"CommentAPicture",
+		{ "Source": "EventView" }
+	);
 
 }
 
@@ -1250,6 +1333,11 @@ function openIframe(imageId){
 	$("body").css('overflow','hidden');
 	
 	loadedIframe();
+	
+	mixpanel.track(
+		"PrintAPicture",
+		{ "Source": "EventView" }
+	);
 
 }
 
