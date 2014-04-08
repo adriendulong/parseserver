@@ -1,4 +1,7 @@
 require('cloud/app.js');
+
+var Image = require("parse-image");
+
 ////////////
 // PUSH NEW PHOTOS EVENT
 ////////////
@@ -24,9 +27,9 @@ Parse.Cloud.define("pushnewphotos", function(request, response) {
 
 	    queryInvits.find({
 		  success: function(results) {
-		    
-		    var users=new Array(); 
-		    for (var i = 0; i < results.length; i++) { 
+
+		    var users=new Array();
+		    for (var i = 0; i < results.length; i++) {
 		    	users[i] = results[i].get("user");
 		    }
 
@@ -178,7 +181,7 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 	  			//Get the users of the comment
 	  			var comments = photo.get("comments");
 	  			var ids = [];
-	  			
+
 	  			for(var i=0;i<comments.length;i++){
 	  				ids.push(comments[i]["id"]);
 	  			}
@@ -187,7 +190,7 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 				var queryUsers = new Parse.Query(Parse.User);
 	  			queryUsers.containedIn("objectId", ids);
 
-	  			queryUsers.find({ 
+	  			queryUsers.find({
 				  success: function(results) {
 
 				    var alreadyOwner = false;
@@ -199,7 +202,7 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 				    	if (results[j].id != request.user.id) {
 				    		allUser.push(results[j]);
 				    	}
-				    	
+
 				    }
 				    if(!alreadyOwner){
 				    	allUser.push(photo.get("user"));
@@ -288,7 +291,14 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 		var query = new Parse.Query(Parse.User);
 		query.exists("has_rsvp_perm");
 	  query.each(function(user) {
+			//One more user seen
+			userIncrement++;
+
+
 	  	//Get invitations
+			var endDate = new Date();
+			var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+
 
 	  	var Invitation = Parse.Object.extend("Invitation");
 	  	var queryInvitations = new Parse.Query(Invitation)
@@ -300,75 +310,80 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	  	//promise
 	  	var promise = new Parse.Promise();
 
-	  	queryInvitations.find({
-		  success: function(invits) {
-		    // The count request succeeded. Show the count
+			if (timeDiff<750000) {
+				queryInvitations.find({
+					success: function(invits) {
+						// The count request succeeded. Show the count
 
-		    //If more than one invitation, send push
-		    if(invits.length >0){
-		    	pushToBeSent++;
-		    	var query = new Parse.Query(Parse.Installation);
-				query.equalTo('owner', user);
-				query.equalTo("is_push_notif", true);
-				query.notEqualTo("appVersion", "1.0");
-				//query.notEqualTo("appVersion", "1.0");
+						//If more than one invitation, send push
+						if(invits.length >0){
 
-				var message;
-				if (invits.length>1) {
-					message = "PushNotifs_InvitationsMany"
-				}
-				else{
-					message = "PushNotifs_InvitationsOne";
-				}
+							var query = new Parse.Query(Parse.Installation);
+							query.equalTo('owner', user);
+							query.equalTo("is_push_notif", true);
+							query.notEqualTo("appVersion", "1.0");
+							//query.notEqualTo("appVersion", "1.0");
 
-				
-				Parse.Push.send({
-					where: query, // Set our Installation query
-					data: {
-					    alert: {
-					    	"loc-key" : message,
-					    	"loc-args" : [invits.length]
-					    },
-					    badge: "Increment",
-					    type: 0
-					}
-				}, 
-				{
-					success: function() {
-					    // Push was successful
-					    userIncrement++;
-					    promise.resolve('Push Sent');
+							var message;
+							if (invits.length>1) {
+								message = "PushNotifs_InvitationsMany"
+							}
+							else{
+								message = "PushNotifs_InvitationsOne";
+							}
+
+
+							/*Parse.Push.send({
+								where: query, // Set our Installation query
+								data: {
+										alert: {
+											"loc-key" : message,
+											"loc-args" : [invits.length]
+										},
+										badge: "Increment",
+										type: 0
+								}
+							},
+							{
+								success: function() {
+										// Push was successful
+										pushToBeSent++;
+										promise.resolve('Push Sent');
+								},
+								error: function(error) {
+										console.log("Error :"+error.message);
+										promise.reject(error);
+								}
+							});*/
+							//userIncrement++;
+
+							promise.resolve('Push Sent');
+						}
+						else{
+							promise.resolve('No invitation');
+						}
+
 					},
 					error: function(error) {
-						userIncrement++;
-					    console.log("Error :"+error.message);
-					    promise.reject(error); 
+						// The request failed
+						promise.reject(error);
 					}
 				});
-				//userIncrement++;
+			}
+			else{
+				promise.resolve('Too late');
+			}
 
-				//promise.resolve('Push Sent');
-		    }
-		    else{
-		    	promise.resolve('No invitation');
-		    }
 
-		  },
-		  error: function(error) {
-		    // The request failed
-		    userIncrement++;
-		    promise.reject(error); 
-		  }
-		});
 
 		return promise;
 
-	  	
+
 
 	  }).then(function(){
 	  	var endDate = new Date();
 	  	var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
-	    status.success('Done with '+pushToBeSent+" users to send and time : "+timeDiff);
+	    status.success('Done with '+pushToBeSent+" push to send and "+userIncrement+" users done and time : "+timeDiff);
 	  }, function (error) {
 	    status.error(error.message);
 	  });
@@ -377,7 +392,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 		status.success('No need to be done');
 	}
 
-  
+
 
 });
 
@@ -402,7 +417,7 @@ Parse.Cloud.job("getNbLikesPhotos", function(request, status) {
 		  },
 		  error: function(photo, error) {
 		  	nbPhotosDone++;
-		    promise.reject(error); 
+		    promise.reject(error);
 		  }
 		});
 
@@ -426,7 +441,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 	query.each(function(eventResult) {
 		var endDate = new Date();
 	  	var timeDiff = Math.abs(today.getTime() - endDate.getTime());
-		
+
 		var promise = new Parse.Promise();
 
 		if (timeDiff<750000) {
@@ -447,7 +462,7 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 							promise.resolve('Nb Photos set');
 			  			},
 			  			error: function(event, error){
-			  				promise.reject(error); 
+			  				promise.reject(error);
 			  			}
 			  		});
 
@@ -456,10 +471,10 @@ Parse.Cloud.job("getNbPhotosPerEvents", function(request, status) {
 			  	//	promise.resolve('No Photos');
 			  	//}
 
-			    
+
 			  },
 			  error: function(photo, error) {
-			    promise.reject(error);  
+			    promise.reject(error);
 			  }
 			});
 		}
@@ -526,7 +541,7 @@ Parse.Cloud.afterSave("Invitation", function(request) {
 					    	}
 					    });
 		      		};
-		      		
+
 		      	},
 		      	error: function(error){
 		      		console.error("Got an error " + error.code + " : " + error.message);
@@ -579,7 +594,7 @@ Parse.Cloud.beforeSave("Event", function(request, response) {
 	else{
 		response.success();
 	}
-	
+
 
 });
 
@@ -611,7 +626,7 @@ Parse.Cloud.beforeSave("Invitation", function(request, response) {
 	else{
 		response.success();
 	}
-	
+
 
 });
 
@@ -620,7 +635,7 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
 	if (!request.object.get("location")) {
 		request.object.set("location", "rien");
 	};
-  response.success();  
+  response.success();
 });
 
 
@@ -643,16 +658,16 @@ Parse.Cloud.beforeSave("Photo", function(request, response) {
 		  	events[0].increment("nb_comments");
 		  }
 		  return events[0].save();
-		 
+
 		}).then(function(event) {
-			request.user.set("last_upload", new Date());
+			//request.user.set("last_upload", new Date());
 			return request.user.save();
 		}).then(function(event) {
 		 	response.success();
 		},function(error){
 			response.success();
 		});
-	
+
 	}
 
 	///
@@ -671,10 +686,10 @@ Parse.Cloud.beforeSave("Photo", function(request, response) {
 			query.find().then(function(events) {
 			  events[0].increment("nb_comments");
 			  return events[0].save();
-			 
+
 			}).then(function(event) {
 			  response.success();
-			 
+
 			},function(error){
 				response.success();
 			});
@@ -703,7 +718,7 @@ Parse.Cloud.beforeSave("Photo", function(request, response) {
 				var query = new Parse.Query("Event");
 				query.equalTo("objectId", request.object.get("event").id);
 				return query.find();
-				
+
 			}).then(function(events){
 				if (increment) {
 					request.object.increment("nb_likes");
@@ -715,12 +730,12 @@ Parse.Cloud.beforeSave("Photo", function(request, response) {
 					console.log("DECREMENT LIKE");
 					events[0].increment("nb_likes", -1);
 				}
-				
+
 				return events[0].save();
-			 
+
 			}).then(function(event) {
 			  response.success();
-			 
+
 			}, function(error){
 				console.log("ERROR : "+error.message);
 				response.success();
@@ -730,7 +745,62 @@ Parse.Cloud.beforeSave("Photo", function(request, response) {
 			response.success();
 		}
 
-		
+
+	}
+});
+
+
+Parse.Cloud.afterSave("Photo", function(request) {
+	if(!request.object.get("low_image")){
+		console.log("No Thumbnail !");
+		Parse.Cloud.httpRequest({
+	    url: request.object.get("full_image").url()
+
+	  }).then(function(response) {
+	    var image = new Image();
+	    return image.setData(response.buffer);
+
+	  }).then(function(image) {
+	    // Crop the image to the smaller of width or height.
+	    var size = Math.min(image.width(), image.height());
+	    return image.crop({
+	      left: (image.width() - size) / 2,
+	      top: (image.height() - size) / 2,
+	      width: size,
+	      height: size
+	    });
+
+	  }).then(function(image) {
+	    // Resize the image to 64x64.
+	    return image.scale({
+	      width: 200,
+	      height: 200
+	    });
+
+	  }).then(function(image) {
+	    // Make sure it's a JPEG to save disk space and bandwidth.
+	    return image.setFormat("JPEG");
+
+	  }).then(function(image) {
+	    // Get the image data in a Buffer.
+	    return image.data();
+
+	  }).then(function(buffer) {
+	    // Save the image into a new file.
+	    var base64 = buffer.toString("base64");
+	    var cropped = new Parse.File("thumbnail.jpg", { base64: base64 });
+	    return cropped.save();
+
+	  }).then(function(cropped) {
+	    // Attach the image file to the original object.
+	    request.object.set("low_image", cropped);
+			return request.object.save();
+
+	  }).then(function(result) {
+	    console.log("Thumbnail created");
+	  }, function(error) {
+	    console.log("Problem creating Thumbnail");
+	  });
 	}
 });
 
@@ -749,24 +819,12 @@ Parse.Cloud.afterDelete("Photo", function(request) {
 			events[0].increment("nb_likes", -(request.object.get("likes").length));
 			events[0].increment("nb_photos", -1);
 			return events[0].save();
-			 
+
 		}).then(function(event) {
 			console.log("succes");
-			 
+
 		},function(error){
 			console.error("Problem modifying nb when delete photo : "+error.message);
 		});
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
