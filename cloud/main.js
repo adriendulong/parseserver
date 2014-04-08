@@ -439,10 +439,59 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 ///////// BACKGROUND JOBS /////////////////////////
 ///////////////////////////////////////////////////
 
+// SET the first time the push invitation date of all the users
+Parse.Cloud.job("setDatePushInvitation", function(request, status) {
+
+	Parse.Cloud.useMasterKey();
+
+	var date = new Date();
+	date.setDate(date.getDate() - 2);
+	var startDate = new Date();
+
+	var nbUsers = 0;
+
+	console.log(date);
+
+	var query = new Parse.Query(Parse.User);
+	query.each(function(user) {
+		console.log("One user");
+
+		var promise = new Parse.Promise();
+
+		user.set("last_push_invitations", date);
+		user.save(null, {
+		  success: function(user) {
+					console.log("Save user");
+		    	nbUsers++;
+					promise.resolve('Saved');
+		  },
+		  error: function(user, error) {
+				console.log("Error user");
+				promise.reject(error);
+		  }
+		});
+
+
+		return promise;
+
+	}).then(function(){
+		console.log("THEN user");
+		var endDate = new Date();
+		var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+		status.success("Done in "+timeDiff+" for "+nbUsers+" users");
+	}, function (error) {
+		console.log("ERROR");
+		status.error(error.message);
+	});
+
+	status.success("Date : "+date)
+
+});
+
 // SEND Notificitaions concerning invitations
 
 Parse.Cloud.job("pushInvitation", function(request, status) {
-	console.log(request.params.startUser);
+	Parse.Cloud.useMasterKey();
 
 	var today = new Date();
 	var pushToBeSent = 0;
@@ -451,10 +500,16 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	//Start Date
 	var startDate = new Date();
 
+	//Date limit
+	var dateLimit = new Date();
+	dateLimit.setDate(dateLimit.getDate() - 1);
+
+
 	//only on sunday
-	if(today.getDay() == 2){
+	if((today.getDay() == 2)||(today.getDay() == 5)){
 		var query = new Parse.Query(Parse.User);
 		query.exists("has_rsvp_perm");
+		query.lessThan("last_push_invitations", dateLimit);
 	  query.each(function(user) {
 			//One more user seen
 			userIncrement++;
@@ -489,6 +544,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 							query.notEqualTo("appVersion", "1.0");
 							//query.notEqualTo("appVersion", "1.0");
 
+							//Not push a user if he is sleeping
 							var message;
 							if (invits.length>1) {
 								message = "PushNotifs_InvitationsMany"
@@ -498,7 +554,9 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 							}
 
 
-							/*Parse.Push.send({
+
+
+							Parse.Push.send({
 								where: query, // Set our Installation query
 								data: {
 										alert: {
@@ -513,19 +571,30 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 								success: function() {
 										// Push was successful
 										pushToBeSent++;
+
+										var date = new Date();
+										user.set("last_push_invitations", date);
+										user.save();
+
 										promise.resolve('Push Sent');
 								},
 								error: function(error) {
 										console.log("Error :"+error.message);
 										promise.reject(error);
 								}
-							});*/
+							});
 							//userIncrement++;
 
-							promise.resolve('Push Sent');
+							//promise.resolve('Push Sent');
 						}
 						else{
+							console.log("No Invitation");
+							var date = new Date();
+							user.set("last_push_invitations", date);
+							user.save();
+
 							promise.resolve('No invitation');
+
 						}
 
 					},
@@ -799,7 +868,13 @@ Parse.Cloud.beforeSave("Invitation", function(request, response) {
 Parse.Cloud.beforeSave(Parse.User, function(request, response) {
 	if (!request.object.get("location")) {
 		request.object.set("location", "rien");
-	};
+	}
+
+	if (!request.object.get("last_push_invitations")) {
+		var date = new Date();
+		request.object.set("last_push_invitations", date);
+	}
+
   response.success();
 });
 
