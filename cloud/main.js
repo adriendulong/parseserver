@@ -450,9 +450,10 @@ Parse.Cloud.job("setDatePushInvitation", function(request, status) {
 
 	var nbUsers = 0;
 
-	console.log(date);
+
 
 	var query = new Parse.Query(Parse.User);
+	query.doesNotExist("last_push_invitations");
 	query.each(function(user) {
 		console.log("One user");
 
@@ -484,7 +485,6 @@ Parse.Cloud.job("setDatePushInvitation", function(request, status) {
 		status.error(error.message);
 	});
 
-	status.success("Date : "+date)
 
 });
 
