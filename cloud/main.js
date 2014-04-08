@@ -1,8 +1,5 @@
 require('cloud/app.js');
-
-<<<<<<< HEAD
 var Image = require("parse-image");
-=======
 var Mandrill = require('mandrill');
 Mandrill.initialize('eW9iPysJRI-LBinyq_D_Hg');
 
@@ -10,7 +7,7 @@ Mandrill.initialize('eW9iPysJRI-LBinyq_D_Hg');
 // SEND NEW EMAIL
 ////////////
 Parse.Cloud.define("sendMailNewUsersLookback", function(request, response) {
-		
+
 		function removeDiacritics (str) {
 
 		  var defaultDiacriticsRemovalMap = [
@@ -99,43 +96,43 @@ Parse.Cloud.define("sendMailNewUsersLookback", function(request, response) {
 		    {'base':'y','letters':/[\u0079\u24E8\uFF59\u1EF3\u00FD\u0177\u1EF9\u0233\u1E8F\u00FF\u1EF7\u1E99\u1EF5\u01B4\u024F\u1EFF]/g},
 		    {'base':'z','letters':/[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g}
 		  ];
-		
+
 		  for(var i=0; i<defaultDiacriticsRemovalMap.length; i++) {
 		    str = str.replace(defaultDiacriticsRemovalMap[i].letters, defaultDiacriticsRemovalMap[i].base);
 		  }
-		
+
 		  return str;
-		
+
 		}
-		
-		
+
+
 		if (request.params.userFirstName) {
 			var userFirstName = removeDiacritics(request.params.userFirstName);
 		} else {
 			var userFirstName = " ";
 		}
-		
+
 
 	   if (request.params.userLang =="fr" || request.params.userLang =="fr-fr") {
 		    var mailContent = "Bonjour " + userFirstName + ",\n\nJe suis Remi, co-fondateur de Woovent.\nJ’espere que tu as apprecie tes statistiques !\nTu peux des maintenant telecharger gratuitement Woovent en cliquant directement sur ce lien depuis ton telephone :\nhttps://itunes.apple.com/fr/app/woovent/id781588768\n\nWoovent est une application faite pour tes evenements Facebook :\n-Dis STOP aux invitations SPAM en gerant facilement tes invitations\n- Recupere des maintenant automatiquement toutes les photos prises par tes amis lors d'evenements passes\n- Accede facilement a tous tes evenements a venir\n\nCa me ferait sincerement plaisir d’avoir tes premiers retours, alors n’hesite pas et ecris moi ici : remi@woovent.com\n\nRemi B.\nCOO @wooventapp";
 		    var subjectContent = "Facebook Event App pour ton iPhone!";
-		    
+
 	    }else {
-	    
+
 		    var mailContent = "Hi " + userFirstName + ",\n\nI’m Remi Bardoux, co-founder of Woovent.\nI hope you appreciated your Facebook events stats!\n\nNow if you want to continue to get the best from your Facebook events you can download the Woovent app on your phone simply by clicking on this link :\nhttps://itunes.apple.com/us/app/woovent/id781588768\n\nWoovent is the first app dedicated to your Facebook events :\n- Say STOP to SPAM invitations easily managing  your invitations\n- Get access to all your upcoming events in one single app\n- Automatically find all the photos that have been taken to a past events\n\nIt would make me really happy to have some feedbacks from you, so don’t hesitate and send me an email to remi@woovent.com\n\nRemi B.\nCOO @wooventapp";
 
 		    var subjectContent = "Facebook Event App now available for iPhone!";
 	    }
-	    
+
 	    if (request.params.userName){
 		    var userName = removeDiacritics(request.params.userName);
-		    
+
 	    } else {
 		    var userName = " "
 	    }
-	    
+
 	   if (request.params.userMail){
-		     
+
 			Mandrill.sendEmail({
 			  message: {
 			    text: mailContent,
@@ -163,13 +160,12 @@ Parse.Cloud.define("sendMailNewUsersLookback", function(request, response) {
 			    response.error("Uh oh, something went wrong");
 			  }
 			});
-		
+
 		}
-			     
- 
+
+
 
 });
->>>>>>> FETCH_HEAD
 
 ////////////
 // PUSH NEW PHOTOS EVENT
@@ -202,8 +198,8 @@ Parse.Cloud.define("pushnewphotos", function(request, response) {
 		    	users[i] = results[i].get("user");
 		    }
 
-		    var query = new Parse.Query(Parse.Installation);
-			query.containedIn('owner', users);
+		  var query = new Parse.Query(Parse.Installation);
+			query.containedIn("owner", users);
 			query.equalTo("is_push_notif", true);
 			query.notEqualTo("appVersion", "1.0");
 
@@ -241,7 +237,7 @@ Parse.Cloud.define("pushnewphotos", function(request, response) {
 			}, {
 			  success: function() {
 			    // Push was successful
-			    console.log("Push envoyés !");
+			    console.log("Push envoyes !");
 			    response.success("PUSH sent");
 			  },
 			  error: function(error) {
@@ -288,7 +284,7 @@ Parse.Cloud.define("pushnewlike", function(request, response) {
 	  		//If not a photo from FB or from a user using the app
 	  		if(photo.get("user")!=null){
 	  			var query = new Parse.Query(Parse.Installation);
-				query.equalTo('owner', photo.get("user"));
+				query.equalTo("owner", photo.get("user"));
 				query.equalTo("is_push_notif", true);
 				query.notEqualTo("appVersion", "1.0");
 
@@ -380,7 +376,7 @@ Parse.Cloud.define("pushnewcomment", function(request, response) {
 
 				    //Push
 		  			var query = new Parse.Query(Parse.Installation);
-					query.containedIn('owner', allUser);
+					query.containedIn("owner", allUser);
 					query.equalTo("is_push_notif", true);
 					query.notEqualTo("appVersion", "1.0");
 					query.notEqualTo("appVersion", "1.0.1");
@@ -456,7 +452,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 	var startDate = new Date();
 
 	//only on sunday
-	if(today.getDay() == 1){
+	if(today.getDay() == 2){
 		var query = new Parse.Query(Parse.User);
 		query.exists("has_rsvp_perm");
 	  query.each(function(user) {
@@ -488,7 +484,7 @@ Parse.Cloud.job("pushInvitation", function(request, status) {
 						if(invits.length >0){
 
 							var query = new Parse.Query(Parse.Installation);
-							query.equalTo('owner', user);
+							query.equalTo("owner", user);
 							query.equalTo("is_push_notif", true);
 							query.notEqualTo("appVersion", "1.0");
 							//query.notEqualTo("appVersion", "1.0");
