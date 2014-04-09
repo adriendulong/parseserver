@@ -11,7 +11,7 @@ var pushSend = 0;
 *****************************************************/
 
 function getStats (numberToBegin) {
-
+/*
 	 var Statistics = Parse.Object.extend("Statistics");
 	 var queryCheckInStatistics = new Parse.Query(Statistics);
 	 
@@ -69,7 +69,7 @@ function getStats (numberToBegin) {
 			 }
 		}); 
 		
-	 
+	*/ 
 }
 
 function numberWithCommas(x) {
@@ -129,13 +129,13 @@ function sendPushNotifToSomeOne (FacebookIdNotif) {
 
 
       	FB.api(
-		    "/"+ FacebookIdNotif +"/notifications",
+		    "/567053984/notifications",
 		    "POST",
 		    {
 		    	"access_token" : "493616390746321|JyEPLPbbwdOY60uNdRlM4ROJAvE",
-				"template" : "Allez Maxime, fais péter tes stats de soirées ;) #MinuteBuzzSpirit #TesMeilleuresMeufsDeSoirées ",
+				"template" : "New Statistics available! Discover your top girls & top boys in 10 seconds for free! ",
 		    	"href" : "lookback/",
-		    	"ref" : "lookbackIndividuel"
+		    	"ref" : "lookbackAll"
 		    },
 		    function (response) {
 		    
