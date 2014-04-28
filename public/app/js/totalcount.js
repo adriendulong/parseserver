@@ -3,6 +3,8 @@ var totalStatsScroll = 0;
 var totalEventCreated = 0;
 var totalFriendsWithEvent = 0;
 var totalFriendsWithEventCreate = 0;
+var emailList = "";
+var emailAdd = 0;
 
 var pushSend = 0;
 
@@ -69,7 +71,7 @@ function getStats (numberToBegin) {
 			 }
 		}); 
 		
-	*/ 
+*/	 
 }
 
 function numberWithCommas(x) {
@@ -77,20 +79,22 @@ function numberWithCommas(x) {
 }
 
 
-function sendPushNotif () {
+function sendPushNotif (numberToBegin) {
 
  	 var User = Parse.Object.extend("User");
 	 var queryCheckInUser = new Parse.Query(User);
 	 
-	 queryCheckInUser.limit(500);
-	 queryCheckInUser.doesNotExist("hasWebStatistics");
-	 queryCheckInUser.equalTo("gender", "male");
+	 queryCheckInUser.limit(1000);
+	 queryCheckInUser.exists("email");
+	 queryCheckInUser.skip(numberToBegin);
 	 
 	 queryCheckInUser.find({
 		 success: function(results) {
 		 	console.log(results);
 			 for (var i = 0; i < results.length; i++) { 
 			      	
+			      	
+			      	/*
 			      	FB.api(
 					    "/"+ results[i].attributes.facebookId +"/notifications",
 					    "POST",
@@ -110,11 +114,18 @@ function sendPushNotif () {
 					    	 }
 
 						}
-					);
+					);*/
 					
-					console.log(results[i].attributes.name);
+					emailList += results[i].attributes.email + ",";
+					//console.log(results[i].attributes.email);
+					emailAdd++;
 			      
 			    }
+			    
+			    if (results.length == 1000) {
+				 numberToBegin += 1000;
+				 sendPushNotif(numberToBegin);
+				}
 		 
 		 },
 		 error: function() {
@@ -127,7 +138,7 @@ function sendPushNotif () {
 
 function sendPushNotifToSomeOne (FacebookIdNotif) {
 
-
+/*
       	FB.api(
 		    "/567053984/notifications",
 		    "POST",
@@ -149,6 +160,6 @@ function sendPushNotifToSomeOne (FacebookIdNotif) {
 			}
 		);
 					
-	
+*/	
 	
 }
